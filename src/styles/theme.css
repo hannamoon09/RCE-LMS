@@ -1,0 +1,132 @@
+:root {
+  --font-sans: "Inter", "Pretendard", ui-sans-serif, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  --font-display: var(--font-sans);
+  --font-mono: "SFMono-Regular", "Menlo", "Consolas", monospace;
+  --font-ui: "SUIT", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  --font-heading: "Wanted Sans", "SUIT", "Apple SD Gothic Neo", sans-serif;
+  /* Application depth: canvas → navigation → workspace → content → interaction. */
+  --surface-app: 222 20% 3.5%;
+  --surface-sidebar: 222 18% 5%;
+  --surface-workspace: 222 16% 8%;
+  --surface-card: 222 13% 11%;
+  --surface-interactive: 222 12% 16%;
+  --background: 220 10% 5%;
+  --foreground: 0 0% 96%;
+  --card: 220 9% 8%;
+  --card-foreground: 0 0% 95%;
+  --primary: 0 0% 96%;
+  --primary-foreground: 220 12% 6%;
+  --secondary: 216 8% 15%;
+  --secondary-foreground: 0 0% 92%;
+  --muted: 218 8% 12%;
+  --muted-foreground: 220 6% 64%;
+  --accent: 188 82% 54%;
+  --accent-foreground: 216 18% 7%;
+  --border-subtle: 218 9% 16%;
+  --border-default: 218 10% 22%;
+  --border-strong: 218 10% 31%;
+  --border: var(--border-default);
+  --input: var(--border-default);
+  --ring: 188 82% 54%;
+  --destructive: 0 72% 56%;
+  --destructive-foreground: 0 0% 98%;
+  --radius: 0.5rem;
+}
+
+/* Public landing keeps its original cinematic palette and type metrics. */
+.app-shell,
+.public-layout-login {
+  --font-sans: var(--font-ui);
+  --font-display: var(--font-heading);
+  --background: var(--surface-workspace);
+  --card: var(--surface-card);
+  --secondary: var(--surface-interactive);
+  --muted: var(--surface-card);
+  --foreground: 220 12% 94%;
+  --muted-foreground: 220 9% 66%;
+  font-family: var(--font-sans);
+  font-feature-settings: "kern";
+}
+
+/* Product-only lighting: depth, numeric emphasis and ranking hierarchy. */
+.app-shell {
+  --surface-app: 220 16% 3.7%;
+  --surface-sidebar: 220 19% 5.2%;
+  --surface-workspace: 218 18% 8.2%;
+  --surface-card: 218 19% 10.6%;
+  --surface-interactive: 218 17% 13.7%;
+  --border-subtle: 218 12% 18%;
+  --border-default: 218 12% 23%;
+  --border-strong: 218 13% 35%;
+  --foreground: 216 15% 93%;
+  --muted-foreground: 218 10% 69%;
+  --text-heading: 216 20% 95%;
+  --text-section: 218 16% 84%;
+  --text-metadata: 218 9% 62%;
+  --text-disabled: 218 7% 45%;
+  --silver: 218 21% 85%;
+  --silver-soft: 218 15% 74%;
+  --silver-bright: 216 22% 88%;
+  --platinum: 216 22% 96%;
+  --gunmetal: 218 12% 57%;
+  --workspace-light-opacity: 0.07;
+  --gradient-workspace:
+    radial-gradient(ellipse 900px 640px at 78% -100px, hsl(var(--silver-bright) / var(--workspace-light-opacity)), transparent 72%),
+    linear-gradient(180deg, hsl(var(--platinum) / 0.015), transparent 420px, hsl(var(--surface-app) / 0.13));
+  --gradient-rule: linear-gradient(90deg, hsl(var(--border-default)), hsl(var(--silver-soft) / 0.32) 38%, hsl(var(--border-subtle)));
+  --gradient-number: linear-gradient(145deg, hsl(var(--platinum)) 18%, hsl(var(--silver-bright)) 65%, hsl(var(--silver-soft)));
+  --gradient-highlight: linear-gradient(100deg, hsl(var(--silver-soft) / 0.07), transparent 78%);
+  --gradient-rank-first: linear-gradient(100deg, hsl(var(--surface-card) / 0.35), hsl(var(--platinum) / 0.08) 35%, transparent 88%);
+  --gradient-rank-second: linear-gradient(100deg, hsl(var(--surface-card) / 0.2), hsl(var(--silver-bright) / 0.05) 35%, transparent 88%);
+  --gradient-rank-third: linear-gradient(100deg, transparent, hsl(var(--gunmetal) / 0.055) 35%, transparent 88%);
+  --radius-surface: 0.25rem;
+}
+
+.app-shell .app-workspace {
+  background-color: hsl(var(--surface-workspace));
+  background-image: var(--gradient-workspace);
+}
+
+@media (max-width: 767px) {
+  .app-shell { --workspace-light-opacity: 0.045; }
+}
+
+.app-shell .rce-surface {
+  background: hsl(var(--card));
+  box-shadow: none;
+}
+
+.rce-surface {
+  background:
+    linear-gradient(180deg, hsl(0 0% 100% / 0.035), transparent 26%),
+    hsl(var(--card));
+  box-shadow: inset 0 1px 0 hsl(var(--border-strong) / 0.32);
+}
+
+.rce-grid {
+  background-image:
+    linear-gradient(hsl(0 0% 100% / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(0 0% 100% / 0.035) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.rce-diagonal {
+  background:
+    linear-gradient(135deg, transparent 0 46%, hsl(var(--primary) / 0.08) 46% 54%, transparent 54%),
+    linear-gradient(180deg, hsl(var(--accent) / 0.07), transparent 44%);
+}
+
+.pixel-edge {
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
