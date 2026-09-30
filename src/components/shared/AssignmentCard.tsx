@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight } from 'lucide-react';
-import { type LearnerAssignment, deadlineLabel, formatDate, isUrgent } from '@/data/lmsData';
-import { StatusBadge } from './Primitives';
+import { ArrowRight } from 'lucide-react';
+import { type LearnerAssignment, formatDate } from '@/data/lmsData';
+import { DeadlineLabel, StatusBadge } from './Primitives';
 import { cn } from '@/lib/utils';
 export function AssignmentCard({ assignment, compact = false, featured = false }: { assignment: LearnerAssignment; compact?: boolean; featured?: boolean }) {
-  const urgent = isUrgent(assignment);
-  return <Link to={`/assignments/${assignment.id}`} data-interactive className={cn('assignment-surface interactive-surface row-link block border p-4 sm:p-5', urgent ? 'border-accent/30 bg-card' : 'border-border bg-card', compact && 'p-4', featured && 'px-5 py-6 sm:px-6 sm:py-7')}>
-    <div className="flex items-center justify-between gap-2"><p className="text-xs text-muted-foreground">난이도 {assignment.difficulty}</p><ArrowUpRight size={16} className="shrink-0 text-muted-foreground" /></div>
-    <div className="mt-3 flex flex-wrap items-center justify-between gap-3"><h3 className={cn("app-item-title min-w-0 text-base [overflow-wrap:anywhere]", featured && "font-display text-2xl sm:text-3xl")}>{assignment.title}</h3><StatusBadge status={assignment.status} /></div>
-    <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground"><span>마감 {formatDate(assignment.deadline, true)}</span><span className={cn('ml-auto text-sm font-medium tabular-nums', urgent && 'text-accent')}>{deadlineLabel(assignment.deadline)}</span></div>
-    {assignment.submittedAt && <p className="mt-4 border-t border-border pt-3 text-xs text-muted-foreground">제출일 {formatDate(assignment.submittedAt, true)}</p>}
+  return <Link to={`/assignments/${assignment.id}`} data-interactive className={cn('assignment-surface interactive-surface row-link group block border border-border bg-card p-4 hover:border-accent/50 active:bg-secondary sm:p-5', compact && 'p-4', featured && 'p-5 sm:p-6')}>
+    <div className="flex flex-wrap items-center justify-between gap-3"><DeadlineLabel assignment={assignment} /><StatusBadge status={assignment.status} /></div>
+    <h3 className={cn('app-item-title mt-3 min-w-0 text-base [overflow-wrap:anywhere]', featured && 'font-display text-2xl font-semibold leading-tight sm:text-3xl')}>{assignment.title}</h3>
+    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground"><time dateTime={assignment.deadline}>마감 {formatDate(assignment.deadline, true)}</time><span>난이도 {assignment.difficulty}</span></div>
+    {assignment.submittedAt && <p className="mt-3 text-sm text-success">제출일 {formatDate(assignment.submittedAt, true)}</p>}
+    <div className="mt-4 border-t border-border-subtle pt-4 text-sm font-medium text-accent"><span className="inline-flex items-center gap-2"><span className="underline-offset-4 group-hover:underline group-focus-visible:underline">과제 확인</span><ArrowRight size={17} aria-hidden="true" /></span></div>
   </Link>;
 }

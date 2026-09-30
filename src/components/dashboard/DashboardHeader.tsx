@@ -7,8 +7,8 @@ import { PageTitleReveal } from '@/motion/PageTitleReveal';
 
 export function DashboardHeader({ compact = false }: { eyebrow?: string; title?: string; compact?: boolean }) {
   const { user } = useLearningData();
-  return <header className={cn('dashboard-header px-5 pb-10 pt-8 sm:px-8 sm:pb-12 sm:pt-10', compact && 'pb-8')}>
-    <p className="app-eyebrow rce-section-code mb-8">01 / DASHBOARD</p>
+  return <header className={cn('dashboard-header px-5 pb-6 pt-6 sm:px-8 sm:pb-8 sm:pt-8', compact && 'pb-6')}>
+    <p className="app-eyebrow rce-section-code mb-5">01 / DASHBOARD</p>
     <div className="flex items-end justify-between gap-5">
       <div className="min-w-0"><PageTitleReveal title={user.name} documentTitle="대시보드" className="app-title dashboard-title" /><p className="mt-3 text-sm text-muted-foreground">{user.track}</p></div>
       <div className="flex shrink-0 items-center gap-4"><p className="app-meta hidden sm:block">{todayLabel}</p><Link to="/profile" aria-label="내 프로필"><UserAvatar user={user} /></Link></div>

@@ -1,15 +1,31 @@
 import { Link } from 'react-router-dom';
 import { useLearningData } from '@/data/useLearningData';
+import { type LearnerAssignment } from '@/data/lmsData';
 import { AssignmentCard } from '@/components/shared/AssignmentCard';
 import { AssignmentRow } from '@/components/shared/AssignmentRow';
-import { SectionHeading, StatusBadge, EmptyState } from '@/components/shared/Primitives';
-import { deadlineLabel } from '@/data/lmsData';
+import { SectionHeading, StatusBadge, DeadlineLabel } from '@/components/shared/Primitives';
 
 export function AssignmentList({ mode = 'cards' }: { mode?: 'cards' | 'table' | 'compact' | 'brand' | 'focus' }) {
   const { assignments } = useLearningData();
-  const missing = assignments.filter(a => a.status === 'missing').sort((a, b) => a.deadline.localeCompare(b.deadline));
-  const visible = missing.slice(0, 3);
-  return <section className="min-w-0"><SectionHeading title={mode === 'focus' ? '다음 과제' : '미제출 과제'} meta={`${missing.length}`} href="/assignments?status=missing" />
-    {visible.length === 0 ? <EmptyState title={assignments.length ? '모든 과제를 제출했습니다' : '아직 등록된 과제가 없습니다'} /> : mode === 'table' ? <div className="overflow-x-auto"><table className="data-table min-w-[420px]"><thead><tr><th>과제</th><th>마감</th><th>제출 상태</th></tr></thead><tbody>{visible.map(a => <tr key={a.id}><td><Link className="app-item-title" to={`/assignments/${a.id}`}>{a.title}</Link></td><td>{deadlineLabel(a.deadline)}</td><td><StatusBadge status={a.status} /></td></tr>)}</tbody></table></div> : mode === 'focus' ? <div><AssignmentCard assignment={visible[0]} featured /><div className="mt-3">{visible.slice(1).map(assignment => <AssignmentRow key={assignment.id} assignment={assignment} />)}</div></div> : <div>{visible.map(assignment => <AssignmentRow key={assignment.id} assignment={assignment} />)}</div>}
-  </section>;
+  const now = Date.now();
+  const missing = assignments.filter(assignment => assignment.status === 'missing');
+  // Use the same deadline boundary as the detail page and submission guard.
+  const upcoming = missing.filter(assignment => new Date(assignment.deadline).getTime() >= now)
+    .sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
+  const overdue = missing.filter(assignment => new Date(assignment.deadline).getTime() < now)
+    .sort((a, b) => new Date(b.deadline).getTime() - new Date(a.deadline).getTime());
+  const title = mode === 'focus' ? '다음 과제' : '미제출 과제';
+  const emptyMessage = overdue.length ? '예정된 미제출 과제가 없습니다.' : assignments.length ? '모든 과제를 제출했습니다' : '아직 등록된 과제가 없습니다';
+  const renderAssignments = (items: LearnerAssignment[], featured = false) => {
+    const visible = items.slice(0, 3);
+    if (mode === 'table') return <div className="overflow-x-auto"><table className="data-table min-w-[420px]"><thead><tr><th>과제</th><th>마감</th><th>제출 상태</th></tr></thead><tbody>{visible.map(assignment => <tr key={assignment.id}><td><Link className="app-item-title" to={`/assignments/${assignment.id}`}>{assignment.title}</Link></td><td><DeadlineLabel assignment={assignment} /></td><td><StatusBadge status={assignment.status} /></td></tr>)}</tbody></table></div>;
+    if (mode === 'focus' && featured) return <div><AssignmentCard assignment={visible[0]} featured /><div className="mt-3">{visible.slice(1).map(assignment => <AssignmentRow key={assignment.id} assignment={assignment} />)}</div></div>;
+    return <div>{visible.map(assignment => <AssignmentRow key={assignment.id} assignment={assignment} />)}</div>;
+  };
+  return <div className="min-w-0 space-y-6">
+    <section aria-label={title} className="min-w-0"><SectionHeading title={title} meta={`${upcoming.length}`} href="/assignments?status=missing" />
+      {upcoming.length ? renderAssignments(upcoming, true) : <p className="py-4 text-sm leading-6 text-muted-foreground">{emptyMessage}</p>}
+    </section>
+    {overdue.length > 0 && <section aria-label="기한 지난 과제" className="min-w-0"><SectionHeading title="기한 지난 과제" meta={`${overdue.length}`} href="/assignments?status=missing" />{renderAssignments(overdue)}</section>}
+  </div>;
 }

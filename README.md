@@ -43,6 +43,7 @@ npx playwright test
 - `src/pages/`: 학습자·운영진 페이지
 - `tests/refinement-admin.spec.ts`, `tests/profile.spec.ts`: 첨부파일 원본·선택 메모·필터·프로필 사진·모바일 편집 검증
 - `tests/lms.spec.ts`: 경로·반응형·사용자 흐름 검증
+- `tests/dashboard-assignments.spec.ts`: 마감 전·기한 지난 과제 분리, 제출 완료 제외, 빈 상태와 기존 마감 후 제출 제한 검증
 - `tests/public.spec.ts`: 공개 페이지·로그인·보호 경로·키보드·모션 감소 검증
 - `tests/workspace-motion.spec.ts`: 제목 접근성·필터 중 모션 재생 방지·빠른 이동·목록 정착·reduced motion 검증
 - `tests/tracks.spec.ts`, `tests/data.spec.ts`: 계정별 공지·직접 URL 접근·운영진 분야 배정·기존 저장 데이터 이전 검증
@@ -52,9 +53,9 @@ npx playwright test
 
 기존 `theme.css`의 canvas → navigation → workspace → card → interactive 위계를 사용합니다. Workspace에는 낮은 불투명도의 정적 Silver 빛을 더하고, `01 / DASHBOARD`처럼 번호가 붙은 섹션 라벨에는 얇은 Graphite → Silver → Graphite 구분선을 사용합니다. Sidebar와 일반 카드는 단색이며 제목은 Off White를 유지합니다. 청록 accent는 상태·마감 임박·포커스에 제한합니다. SUIT와 Wanted Sans의 크기·굵기·자간으로 정보의 우선순위를 구분합니다.
 
-대시보드는 다음 과제 한 개만 주요 카드로 강조하고, 미제출 수를 전체·제출 완료보다 크게 표시합니다. 모바일에서는 요약 수치와 다음 과제를 먼저 확인할 수 있습니다. 공지·제출·활동은 열린 섹션과 행으로 구성하며, 과제 목록도 카드 그리드 대신 마감·제출 상태를 비교하는 목록을 사용합니다. Admin은 검토 대기 수와 제출 목록을 중심으로 구성합니다. 일반 정보마다 카드·아이콘을 추가하지 않습니다.
+대시보드는 제출 가능한 과제 중 마감이 가장 가까운 한 개를 주요 카드로 강조하고, 실제 마감 날짜에 따라 오늘 마감·마감 임박·기한 초과를 표시합니다. 과제 확인은 기존 상세 경로로 연결됩니다. 사용자 이름은 Desktop 최대 40px, 미제출 수는 최대 64px이며 보조 정보는 13~14px입니다. 모바일에서는 다음 과제부터 확인할 수 있습니다. 마감 전 미제출은 가까운 마감순으로 다음 과제에, 기한 지난 미제출은 별도 목록에 최근 마감순으로 각각 최대 3개 표시합니다. 예정 과제가 없으면 빈 상태를 표시하며 기존 마감 후 제출 제한을 유지합니다. 최근 공지는 상단 과제·통계 두 열 다음의 독립된 전체 너비 행에 32px 간격으로 배치하며, 최근 제출물과 최근 활동은 넓은 화면에서 2열, 좁은 화면에서 1열입니다. 공지·제출·활동은 열린 섹션과 행으로 구성하며, 과제 목록도 카드 그리드 대신 마감·제출 상태를 비교하는 목록을 사용합니다. Admin은 검토 대기 수와 제출 목록을 중심으로 구성합니다. 일반 정보마다 카드·아이콘을 추가하지 않습니다.
 
-Anime.js의 `outCubic`을 유지합니다. 페이지는 90ms 퇴장 후 180ms 진입, 제목 전체는 160ms fade와 2px 이동만 사용하고 문자 stagger는 실행하지 않습니다. 필터로 이동하는 항목은 200ms, 새 항목은 180ms로 표시합니다. 주요 카드 hover는 -1px, 버튼 press는 0.985입니다. 대시보드·운영·프로필 수치는 즉시 표시하며 과제 진행률이나 진행 바는 사용하지 않습니다. Sidebar는 경로 이동마다 재등장하지 않습니다. Drawer와 Modal은 닫힘 후 제거하고 포커스 복귀·Escape·스크롤 잠금을 처리합니다. 실행 중 모션 감소 설정을 변경해도 콘텐츠와 최종 상태를 즉시 복원합니다.
+Anime.js의 `outCubic`을 유지합니다. 페이지는 90ms 퇴장 후 180ms 진입, 제목 전체는 160ms fade와 2px 이동만 사용하고 문자 stagger는 실행하지 않습니다. 필터로 이동하는 항목은 200ms, 새 항목은 180ms로 표시합니다. 주요 카드 hover는 -1px, 버튼 press는 0.985입니다. 대시보드·운영·프로필 수치는 즉시 표시하며 과제 진행률이나 진행 바는 사용하지 않습니다. Sidebar는 경로 이동마다 재등장하지 않습니다. Drawer와 Modal은 닫힘 후 제거하고 Tab/Shift+Tab 내부 순환·포커스 복귀·Escape·배경 스크롤 잠금을 처리합니다. 낮은 화면에서는 Drawer 내부를 스크롤해 하단 메뉴에 접근합니다. 실행 중 모션 감소 설정을 변경해도 콘텐츠와 최종 상태를 즉시 복원합니다.
 
 Anime.js API는 설치된 v4 계열과 [공식 React 통합 문서](https://animejs.com/documentation/getting-started/using-with-react/), [Scope cleanup](https://animejs.com/documentation/scope/scope-methods/revert/)를 기준으로 구성했습니다.
 
@@ -104,13 +105,13 @@ Dashboard의 내 순위와 Profile 통계는 같은 `calculateStudentRanking` �
 | --- | --- | --- |
 | Application background | `--surface-app` | `hsl(220 16% 3.7%)` |
 | Sidebar / mobile drawer | `--surface-sidebar` | `hsl(220 19% 5.2%)` |
-| Main workspace | `--surface-workspace` | `hsl(218 18% 8.2%)` |
-| Section / card | `--surface-card` | `hsl(218 19% 10.6%)` |
-| Hover / selected | `--surface-interactive` | `hsl(218 17% 13.7%)` |
+| Main workspace | `--surface-workspace` | `#101318` |
+| Section / card | `--surface-card` | `#191E26` |
+| Hover / selected | `--surface-interactive` | `#191E26` |
 
-Silver 경계선은 `--border-subtle/default/strong`을 유지합니다. 메뉴 선택은 낮은 밝기의 surface와 얇은 silver indicator로 표현합니다. 일반 섹션에는 배경·그림자를 추가하지 않고, 주요 과제 surface에만 4px radius를 사용합니다. 공개 랜딩의 브랜드 비주얼과 상태 배지는 유지합니다.
+주요 텍스트 `#EAEDF0`, 보조 텍스트 `#A8AEB8`, 동작·링크·선택 `#8ACBD8`, 마감 임박 `#E3B66F`, 제출·검토 완료 `#83BEA3`, 피드백 도착은 동작과 동일한 시안 `#8ACBD8`, 기한 초과·오류 `#E89292`로 역할을 구분합니다. 일반 미제출·검토 대기는 중립색이며 상태 문구를 함께 표시합니다. 기본 배경과 카드 위의 일반 텍스트 대비는 모두 AA(4.5:1 이상)를 충족합니다. 채워진 오류 버튼과 활성 스위치에는 어두운 전경색을 사용합니다. Silver 경계선은 `--border-subtle/default/strong`을 유지합니다. 메뉴 선택은 낮은 밝기의 surface와 얇은 cyan indicator·아이콘으로 표현합니다. 일반 섹션에는 배경·그림자를 추가하지 않고, 주요 과제 surface에만 4px radius를 사용합니다. 공개 랜딩의 브랜드 비주얼과 상태 배지는 유지합니다.
 
-무채색 빛은 `.app-shell` 안의 `--silver-soft`, `--silver-bright`, `--platinum`, `--gunmetal`과 `--gradient-workspace/rule/number/highlight/rank-first/rank-second/rank-third`로 관리합니다. 미제출·내 순위 숫자, 주요 구분선, 순위 Top 3·현재 사용자 행·선택된 분야 필터에만 적용합니다. Workspace 빛의 최대 불투명도는 Desktop 7%, 모바일 4.5%이며 그라데이션 자체는 움직이지 않습니다. 본문·제목·일반 카드에는 그라데이션을 적용하지 않습니다.
+무채색 빛은 `.app-shell` 안의 `--silver-soft`, `--silver-bright`, `--platinum`, `--gunmetal`과 `--gradient-workspace/rule/number/highlight/rank-first/rank-second/rank-third`로 관리합니다. 미제출·내 순위 숫자, 주요 구분선, 순위 Top 3·현재 사용자 행·선택된 분야 필터에만 적용합니다. Workspace 빛의 최대 불투명도는 Desktop 2.5%, 모바일 1.5%이며 그라데이션 자체는 움직이지 않습니다. 본문·제목·일반 카드에는 그라데이션을 적용하지 않습니다.
 
 본문·메뉴·Form·Table은 **SUIT Variable 400–700**, 페이지 제목·섹션 제목·큰 숫자는 **Wanted Sans Variable 600–700**을 사용합니다. UI는 정돈된 한글 가독성을, 제목은 더 뚜렷한 문자 조형을 담당합니다. CSS 변수 `--font-sans/display/mono`와 Tailwind `font-sans/display/mono`로 관리합니다. `app-title`, `app-section-title`, `app-item-title`, `app-number`, `app-meta`, `app-eyebrow`가 크기·굵기·자간·행간의 역할을 나눕니다. 숫자는 tabular figures를 사용하고 monospace는 학번·ID·기술 메타데이터에 제한합니다.
 

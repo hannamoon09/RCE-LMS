@@ -79,7 +79,7 @@
     letter-spacing: 0.09em;
   }
   .app-shell .app-meta {
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
     font-weight: 400;
     line-height: 1.65;
     letter-spacing: 0.005em;
@@ -102,12 +102,13 @@
     height: 1px;
     background: var(--gradient-rule);
   }
-  .app-shell .dashboard-title { font-size: clamp(2.5rem, 2rem + 2vw, 3.5rem); line-height: 1.15; }
-  .app-shell .rce-section-heading { border-bottom: 1px solid hsl(var(--border-default)); padding-bottom: 1rem; }
+  .app-shell .dashboard-title { font-size: clamp(2rem, 1.75rem + .75vw, 2.5rem); line-height: 1.2; }
+  .app-shell .rce-section-heading { border-bottom: 1px solid hsl(var(--border-default)); padding-bottom: .75rem; }
+  .app-shell .rce-section-heading .row-link { color: hsl(var(--accent)); font-size: .8125rem; }
   .app-shell .assignment-surface { border-radius: var(--radius-surface); }
   .app-shell .assignment-row { border-radius: 0; }
   .app-shell .feed-row { border-radius: 0; }
-  .app-shell .summary-primary .app-number { font-size: clamp(4rem, 3rem + 4vw, 6rem); line-height: 1; letter-spacing: -0.055em; }
+  .app-shell .summary-primary .app-number { font-size: clamp(3.5rem, 3rem + 1vw, 4rem); line-height: 1; letter-spacing: -0.045em; }
   .app-shell .summary-secondary .app-number { font-size: 1.5rem; letter-spacing: -0.03em; }
   .app-shell .platinum-number {
     color: hsl(var(--platinum));
@@ -129,10 +130,14 @@
   .app-shell .ranking-table :is(th, td) { padding-left: 1rem; padding-right: 1rem; }
   .app-shell .ranking-table th:not(:nth-child(2)), .app-shell .ranking-table td:not(:nth-child(2)) { text-align: right; }
   .app-shell .ranking-table :is(th, td):first-child { text-align: left; }
-  .app-shell [data-nav-indicator] { background: hsl(var(--silver)); }
+  .app-shell [data-nav-indicator] { background: hsl(var(--accent)); }
   .app-shell nav [aria-current="page"] { color: hsl(var(--text-heading)); }
+  .app-shell nav [aria-current="page"] > svg { color: hsl(var(--accent)); }
   .app-shell :is(button, input, select, textarea):disabled { color: hsl(var(--text-disabled)); }
-  .app-shell .interactive-surface:hover { background-color: hsl(var(--surface-interactive)); }
+  .app-shell .interactive-surface:hover { background-color: hsl(var(--surface-interactive)); border-color: hsl(var(--accent) / .55); }
+  .app-shell .row-link:hover { color: hsl(var(--accent)); }
+  .app-shell .row-link:active { background-color: hsl(var(--accent) / .06); }
+  .app-shell .data-table th { font-size: .8125rem; }
   .app-shell .field,
   .public-layout-login .field { background-color: hsl(var(--surface-sidebar)); }
   .app-shell .field,

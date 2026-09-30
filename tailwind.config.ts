@@ -21,6 +21,8 @@ export default {
         },
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
+        warning: "hsl(var(--warning) / <alpha-value>)",
+        success: "hsl(var(--success) / <alpha-value>)",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {

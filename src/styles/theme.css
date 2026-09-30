@@ -22,6 +22,8 @@
   --muted-foreground: 220 6% 64%;
   --accent: 188 82% 54%;
   --accent-foreground: 216 18% 7%;
+  --warning: 36.724 67.442% 66.275%;
+  --success: 152.542 31.217% 62.941%;
   --border-subtle: 218 9% 16%;
   --border-default: 218 10% 22%;
   --border-strong: 218 10% 31%;
@@ -52,27 +54,34 @@
 .app-shell {
   --surface-app: 220 16% 3.7%;
   --surface-sidebar: 220 19% 5.2%;
-  --surface-workspace: 218 18% 8.2%;
-  --surface-card: 218 19% 10.6%;
-  --surface-interactive: 218 17% 13.7%;
+  --surface-workspace: 217.5 20% 7.843%; /* #101318 */
+  --surface-card: 216.923 20.635% 12.353%; /* #191E26 */
+  --surface-interactive: var(--surface-card);
   --border-subtle: 218 12% 18%;
   --border-default: 218 12% 23%;
   --border-strong: 218 13% 35%;
-  --foreground: 216 15% 93%;
-  --muted-foreground: 218 10% 69%;
-  --text-heading: 216 20% 95%;
+  --foreground: 210 16.667% 92.941%; /* #EAEDF0 */
+  --card-foreground: var(--foreground);
+  --muted-foreground: 217.5 10.127% 69.02%; /* #A8AEB8 */
+  --secondary-foreground: var(--muted-foreground);
+  --accent: 190 50% 69.412%; /* #8ACBD8: actions and focus */
+  --accent-foreground: var(--surface-workspace);
+  --ring: var(--accent);
+  --destructive: 0 65.152% 74.118%; /* #E89292: overdue and errors */
+  --destructive-foreground: var(--surface-workspace);
+  --text-heading: var(--foreground);
   --text-section: 218 16% 84%;
-  --text-metadata: 218 9% 62%;
+  --text-metadata: var(--muted-foreground);
   --text-disabled: 218 7% 45%;
   --silver: 218 21% 85%;
   --silver-soft: 218 15% 74%;
   --silver-bright: 216 22% 88%;
   --platinum: 216 22% 96%;
   --gunmetal: 218 12% 57%;
-  --workspace-light-opacity: 0.07;
+  --workspace-light-opacity: 0.025;
   --gradient-workspace:
     radial-gradient(ellipse 900px 640px at 78% -100px, hsl(var(--silver-bright) / var(--workspace-light-opacity)), transparent 72%),
-    linear-gradient(180deg, hsl(var(--platinum) / 0.015), transparent 420px, hsl(var(--surface-app) / 0.13));
+    linear-gradient(180deg, hsl(var(--platinum) / 0.008), transparent 420px, hsl(var(--surface-app) / 0.08));
   --gradient-rule: linear-gradient(90deg, hsl(var(--border-default)), hsl(var(--silver-soft) / 0.32) 38%, hsl(var(--border-subtle)));
   --gradient-number: linear-gradient(145deg, hsl(var(--platinum)) 18%, hsl(var(--silver-bright)) 65%, hsl(var(--silver-soft)));
   --gradient-highlight: linear-gradient(100deg, hsl(var(--silver-soft) / 0.07), transparent 78%);
@@ -88,7 +97,7 @@
 }
 
 @media (max-width: 767px) {
-  .app-shell { --workspace-light-opacity: 0.045; }
+  .app-shell { --workspace-light-opacity: 0.015; }
 }
 
 .app-shell .rce-surface {

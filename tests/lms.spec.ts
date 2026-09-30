@@ -126,10 +126,29 @@ test('mobile drawer closes after motion, traps focus and supports reduced motion
   await trigger.click();
   const dialog = page.getByRole('dialog', { name: '메뉴', exact: true });
   await expect(dialog).toBeVisible();
-  expect(await page.evaluate(() => document.activeElement?.closest('dialog') !== null)).toBeTruthy();
-  for (let i = 0; i < 12; i++) await page.keyboard.press('Tab');
-  expect(await page.evaluate(() => document.activeElement?.closest('dialog') !== null)).toBeTruthy();
-  await dialog.getByRole('button', { name: '메뉴 닫기' }).click();
+  const close = dialog.getByRole('button', { name: '메뉴 닫기', exact: true });
+  const logout = dialog.getByRole('button', { name: '로그아웃', exact: true });
+  await expect(close).toBeFocused();
+  const tabStops = await dialog.locator('button:not([tabindex="-1"]), a[href]').count();
+  for (const key of ['Tab', 'Shift+Tab']) {
+    await close.focus();
+    for (let index = 0; index < tabStops + 2; index++) {
+      await page.keyboard.press(key);
+      expect(await dialog.evaluate(element => element.contains(document.activeElement)), `${key} step ${index + 1}`).toBe(true);
+    }
+  }
+  await logout.focus();
+  await page.keyboard.press('Tab');
+  await expect(close).toBeFocused();
+  await page.keyboard.press('Shift+Tab');
+  await expect(logout).toBeFocused();
+  await page.setViewportSize({ width: 390, height: 480 });
+  await logout.scrollIntoViewIfNeeded();
+  await expect(logout).toBeInViewport();
+  const panel = dialog.locator(':scope > div');
+  await expect(panel).toHaveCSS('overflow-y', 'auto');
+  expect(await panel.evaluate(element => element.getBoundingClientRect().bottom <= innerHeight + 1)).toBe(true);
+  await close.click();
   await expect(dialog).toHaveCount(0);
   await expect(trigger).toBeFocused();
   await trigger.click();
