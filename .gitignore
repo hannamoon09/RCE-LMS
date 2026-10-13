@@ -1,8 +1,56 @@
+# Dependencies and generated build/test output
 node_modules/
 dist/
+.gradle/
+backend/build/
+coverage/
+*.tsbuildinfo
 test-results/
 playwright-report/
 .sites-runtime/
-.DS_Store
+
+# Local environment and credentials (keep the empty example)
 .env
-.env.local
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Runtime uploads, local databases, and backups
+backend-data/
+uploads/
+backups/
+database-dumps/
+pgdata/
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.dump
+*.dump.*
+*.backup
+*.sql.gz
+*.sql.bz2
+*.sql.xz
+*.sql.zip
+dump.sql
+pg_dump*.sql
+*_dump.sql
+*-dump.sql
+# Do not ignore *.sql: Flyway migrations are source files.
+
+# Local logs, OS/editor files, and hosting CLI state
+*.log
+logs/
+.DS_Store
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+.vercel/
+.railway/

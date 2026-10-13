@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: ${TEST_DB_URL:jdbc:postgresql://localhost:5432/rce_lms_test}
+    username: ${TEST_DB_USERNAME:${DB_USERNAME}}
+    password: ${TEST_DB_PASSWORD:${DB_PASSWORD}}
+server:
+  servlet:
+    session:
+      cookie:
+        secure: false
+app:
+  session-cookie-secure: false
+  file-cleanup-delay-ms: 86400000

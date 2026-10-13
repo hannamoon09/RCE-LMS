@@ -1,0 +1,793 @@
+{
+  "verifiedOn": "2026-10-13",
+  "timezone": "Asia/Seoul",
+  "scope": "Production runtime mock/development cleanup; no production deployment",
+  "frontendBuild": "PASS",
+  "backendBuild": "PASS",
+  "liveDevelopmentSmoke": "PASS",
+  "browser": {
+    "distinctPassed": 93,
+    "priorPassed": 15,
+    "focusedNewPassed": 2,
+    "resumedPassed": 76,
+    "resumedDuration": "6.0m",
+    "cases": [
+      {
+        "file": "tests/admin-api.spec.ts",
+        "title": "admin review APIs filter server submissions, persist feedback, and reset all review fields on resubmission"
+      },
+      {
+        "file": "tests/admin-api.spec.ts",
+        "title": "existing admin review modal saves score and feedback and member resubmission resets the review"
+      },
+      {
+        "file": "tests/admin-api.spec.ts",
+        "title": "staff creates and edits a member in the UI, the member logs in, and deactivation invalidates that session"
+      },
+      {
+        "file": "tests/assignment-api.spec.ts",
+        "title": "assignment APIs restrict list and detail to the authenticated track and forbid member writes"
+      },
+      {
+        "file": "tests/assignment-api.spec.ts",
+        "title": "assignment creation rejects client-selected track and author fields"
+      },
+      {
+        "file": "tests/assignment-api.spec.ts",
+        "title": "staff creates, edits and deletes an assignment in the preserved UI and a member sees server changes"
+      },
+      {
+        "file": "tests/auth-api.spec.ts",
+        "title": "an external return destination falls back to the local dashboard"
+      },
+      {
+        "file": "tests/auth-api.spec.ts",
+        "title": "login without a CSRF header is blocked and an incorrect password never starts a session"
+      },
+      {
+        "file": "tests/auth-api.spec.ts",
+        "title": "member uses the existing login form and restores the dashboard session after reload"
+      },
+      {
+        "file": "tests/auth-api.spec.ts",
+        "title": "protected route retains its destination through login and reload"
+      },
+      {
+        "file": "tests/auth-api.spec.ts",
+        "title": "raw CSRF cookie token authenticates, rotates, persists a session, and logs out"
+      },
+      {
+        "file": "tests/auth-api.spec.ts",
+        "title": "staff uses the existing login form and restores the dashboard session after reload"
+      },
+      {
+        "file": "tests/auth-api.spec.ts",
+        "title": "the existing mobile login and dashboard remain usable with server authentication"
+      },
+      {
+        "file": "tests/dashboard-assignments.spec.ts",
+        "title": "an empty assignment collection shows its own empty state without implying completion"
+      },
+      {
+        "file": "tests/dashboard-assignments.spec.ts",
+        "title": "fully submitted assignments show the completed empty state without overdue rows"
+      },
+      {
+        "file": "tests/dashboard-assignments.spec.ts",
+        "title": "overdue-only data shows a compact empty upcoming group and preserves the closed submission policy"
+      },
+      {
+        "file": "tests/dashboard-assignments.spec.ts",
+        "title": "upcoming assignments precede a separate overdue list, using deadline time and excluding submissions"
+      },
+      {
+        "file": "tests/data.spec.ts",
+        "title": "learner status and activity follow their own submissions, including reviewed zero and missing references"
+      },
+      {
+        "file": "tests/data.spec.ts",
+        "title": "notice priority edits retain newest-first ordering and a deterministic ID tie break"
+      },
+      {
+        "file": "tests/file-api.spec.ts",
+        "title": "assignment attachments upload, retain, replace and download only within the authenticated track"
+      },
+      {
+        "file": "tests/file-api.spec.ts",
+        "title": "existing file pickers upload assignment and file-only submission, preserve files on reload, and download server content"
+      },
+      {
+        "file": "tests/file-api.spec.ts",
+        "title": "file-only submission is persisted, downloadable by its owner and staff, and resubmission removes old files"
+      },
+      {
+        "file": "tests/lms.spec.ts",
+        "title": "admin status and selected-review query state survive refresh and dismissal"
+      },
+      {
+        "file": "tests/lms.spec.ts",
+        "title": "all routes render without overflow or console errors at 1024px"
+      },
+      {
+        "file": "tests/lms.spec.ts",
+        "title": "all routes render without overflow or console errors at 1280px"
+      },
+      {
+        "file": "tests/lms.spec.ts",
+        "title": "all routes render without overflow or console errors at 1440px"
+      },
+      {
+        "file": "tests/lms.spec.ts",
+        "title": "all routes render without overflow or console errors at 375px"
+      },
+      {
+        "file": "tests/lms.spec.ts",
+        "title": "all routes render without overflow or console errors at 390px"
+      },
+      {
+        "file": "tests/lms.spec.ts",
+        "title": "all routes render without overflow or console errors at 768px"
+      },
+      {
+        "file": "tests/lms.spec.ts",
+        "title": "an explicitly reviewed zero remains visible after reload in the learner detail"
+      },
+      {
+        "file": "tests/lms.spec.ts",
+        "title": "file validation, removal, drag-drop and closed submission controls remain usable"
+      },
+      {
+        "file": "tests/lms.spec.ts",
+        "title": "mobile drawer closes after motion, traps focus and supports reduced motion"
+      },
+      {
+        "file": "tests/lms.spec.ts",
+        "title": "reduced motion keeps every route visible and server-derived counters final"
+      },
+      {
+        "file": "tests/lms.spec.ts",
+        "title": "search and combined filters expose a useful empty state"
+      },
+      {
+        "file": "tests/notice-api.spec.ts",
+        "title": "notice APIs publish only to the staff track and reject member writes or client-selected tracks"
+      },
+      {
+        "file": "tests/notice-api.spec.ts",
+        "title": "notice loading errors preserve the application shell and retry loads real server notices"
+      },
+      {
+        "file": "tests/notice-api.spec.ts",
+        "title": "staff creates, edits and deletes a notice in the existing UI and members read it on desktop and mobile"
+      },
+      {
+        "file": "tests/preferences-api.spec.ts",
+        "title": "four settings persist across reload and a new session without affecting another account"
+      },
+      {
+        "file": "tests/preferences-api.spec.ts",
+        "title": "load and save failures preserve useful retry controls and unsaved choices"
+      },
+      {
+        "file": "tests/production-cleanup.spec.ts",
+        "title": "API failures show retry without replacing server assignments with sample data"
+      },
+      {
+        "file": "tests/production-cleanup.spec.ts",
+        "title": "clean browsers use persisted API data through empty state, submission, review, reload and logout"
+      },
+      {
+        "file": "tests/profile-api.spec.ts",
+        "title": "account name and optional email persist on the server while studentId, FIELD and role remain immutable"
+      },
+      {
+        "file": "tests/profile-api.spec.ts",
+        "title": "account save failure stays visible, preserves the draft and can be retried"
+      },
+      {
+        "file": "tests/profile-api.spec.ts",
+        "title": "password change rejects the wrong current password then logs out all old sessions and accepts only the new password"
+      },
+      {
+        "file": "tests/profile-crop-api.spec.ts",
+        "title": "375px crop dialog stays within the viewport and its controls remain reachable"
+      },
+      {
+        "file": "tests/profile-crop-api.spec.ts",
+        "title": "crop pointer drag, reset and keyboard boundaries stay usable before cancelling"
+      },
+      {
+        "file": "tests/profile-crop-api.spec.ts",
+        "title": "crop supports keyboard pan and zoom, stores a real 512px image, persists across pages, and restores fallback"
+      },
+      {
+        "file": "tests/profile-crop-api.spec.ts",
+        "title": "failed server save keeps the previous profile image and allows retry"
+      },
+      {
+        "file": "tests/profile-crop-api.spec.ts",
+        "title": "profile photo accepts PNG, JPEG and WebP and cancel permits choosing the same file again"
+      },
+      {
+        "file": "tests/profile-crop-api.spec.ts",
+        "title": "profile photo rejects unsupported types, files over 5MB, and either dimension below 256px"
+      },
+      {
+        "file": "tests/profile-crop-api.spec.ts",
+        "title": "profile shows server assignment activity separately, joined date, and account status only in sidebar"
+      },
+      {
+        "file": "tests/public.spec.ts",
+        "title": "all LMS and unknown legacy routes require login"
+      },
+      {
+        "file": "tests/public.spec.ts",
+        "title": "ambient network motion can be paused and suspends outside the viewport"
+      },
+      {
+        "file": "tests/public.spec.ts",
+        "title": "an invalid session cookie returns to the login form"
+      },
+      {
+        "file": "tests/public.spec.ts",
+        "title": "authenticated visitors keep the public landing and can enter their dashboard"
+      },
+      {
+        "file": "tests/public.spec.ts",
+        "title": "hero CTA works with a keyboard across repeated public navigation"
+      },
+      {
+        "file": "tests/public.spec.ts",
+        "title": "login supports keyboard input, validation, loading, and returning to the requested route"
+      },
+      {
+        "file": "tests/public.spec.ts",
+        "title": "public pages fit 1440px and keep the hero CTA in the first viewport"
+      },
+      {
+        "file": "tests/public.spec.ts",
+        "title": "public pages fit 375px and keep the hero CTA in the first viewport"
+      },
+      {
+        "file": "tests/public.spec.ts",
+        "title": "public pages fit 430px and keep the hero CTA in the first viewport"
+      },
+      {
+        "file": "tests/public.spec.ts",
+        "title": "public pages fit 768px and keep the hero CTA in the first viewport"
+      },
+      {
+        "file": "tests/public.spec.ts",
+        "title": "reduced motion keeps the story visible with no repeating signals"
+      },
+      {
+        "file": "tests/rankings-api.spec.ts",
+        "title": "member dashboard, profile and responsive rankings show server scores and refresh after UI resubmission without reloading"
+      },
+      {
+        "file": "tests/rankings-api.spec.ts",
+        "title": "server rankings use reviewed totals, include zero-score members, exclude inactive accounts and expose only six fields"
+      },
+      {
+        "file": "tests/rankings-api.spec.ts",
+        "title": "staff rankings keep a read-only own FIELD and refresh after review and account deactivation in the same application"
+      },
+      {
+        "file": "tests/rankings.spec.ts",
+        "title": "long rankings preserve a lower own rank, every student, and mobile reduced-motion final states"
+      },
+      {
+        "file": "tests/rankings.spec.ts",
+        "title": "리버싱 rankings keep own FIELD and privacy even with a forged query"
+      },
+      {
+        "file": "tests/rankings.spec.ts",
+        "title": "웹해킹 rankings keep own FIELD and privacy even with a forged query"
+      },
+      {
+        "file": "tests/rankings.spec.ts",
+        "title": "포너블 rankings keep own FIELD and privacy even with a forged query"
+      },
+      {
+        "file": "tests/rankings.spec.ts",
+        "title": "포렌식 rankings keep own FIELD and privacy even with a forged query"
+      },
+      {
+        "file": "tests/refinement-admin.spec.ts",
+        "title": "a file-only submission persists and administrators download the original bytes"
+      },
+      {
+        "file": "tests/refinement-admin.spec.ts",
+        "title": "an assignment without selected files has no generated attachment"
+      },
+      {
+        "file": "tests/refinement-admin.spec.ts",
+        "title": "assignment files preserve their bytes through reload and edits, discard canceled changes, and can be removed"
+      },
+      {
+        "file": "tests/refinement-admin.spec.ts",
+        "title": "canceling a new assignment discards its selected file and form values"
+      },
+      {
+        "file": "tests/refinement-admin.spec.ts",
+        "title": "student management has read-only own FIELD and includes inactive members on desktop and mobile"
+      },
+      {
+        "file": "tests/refinement-admin.spec.ts",
+        "title": "submission review combines own-field assignment, status and search with refresh and reset"
+      },
+      {
+        "file": "tests/security-api.spec.ts",
+        "title": "development server blocks private storage and backend files while authenticated downloads remain available"
+      },
+      {
+        "file": "tests/submission-api.spec.ts",
+        "title": "member submissions persist, resubmission replaces the same record, and assignment deletion is protected"
+      },
+      {
+        "file": "tests/submission-api.spec.ts",
+        "title": "submission APIs enforce track, member role, nonempty content and deadline"
+      },
+      {
+        "file": "tests/submission-api.spec.ts",
+        "title": "the existing submission UI saves and resubmits server data and staff sees the protected deletion error"
+      },
+      {
+        "file": "tests/tracks.spec.ts",
+        "title": "About and LMS navigate to distinct club and product sections with a branded hero"
+      },
+      {
+        "file": "tests/tracks.spec.ts",
+        "title": "member cannot reassign their field through admin routes"
+      },
+      {
+        "file": "tests/tracks.spec.ts",
+        "title": "old browser state cannot override server identity, assignment status or preferences"
+      },
+      {
+        "file": "tests/tracks.spec.ts",
+        "title": "staff manages own-field members without reassignment or promotion controls and submissions remain attached to the member"
+      },
+      {
+        "file": "tests/tracks.spec.ts",
+        "title": "리버싱 account sees only own assignments and own or global notices"
+      },
+      {
+        "file": "tests/tracks.spec.ts",
+        "title": "웹해킹 account sees only own assignments and own or global notices"
+      },
+      {
+        "file": "tests/tracks.spec.ts",
+        "title": "포너블 account sees only own assignments and own or global notices"
+      },
+      {
+        "file": "tests/tracks.spec.ts",
+        "title": "포렌식 account sees only own assignments and own or global notices"
+      },
+      {
+        "file": "tests/workspace-motion.spec.ts",
+        "title": "filtered lists preserve surviving rows and settle after empty states and responsive changes"
+      },
+      {
+        "file": "tests/workspace-motion.spec.ts",
+        "title": "rapid navigation and Back leave the persistent sidebar and final page usable"
+      },
+      {
+        "file": "tests/workspace-motion.spec.ts",
+        "title": "reduced motion starts fully visible and safely finishes an active title reveal"
+      },
+      {
+        "file": "tests/workspace-motion.spec.ts",
+        "title": "search and query filters retain focus without replaying the title or page transition"
+      },
+      {
+        "file": "tests/workspace-motion.spec.ts",
+        "title": "titles stay whole and only the workspace receives ambient silver depth"
+      }
+    ]
+  },
+  "backend": {
+    "distinctPassed": 94,
+    "existingPassed": 89,
+    "productionRestartPassed": 5,
+    "finalFocusedTestAndBuildDuration": "21s",
+    "cases": [
+      {
+        "class": "com.rce.lms.AdminReviewIntegrationTest",
+        "name": "listIsTrackScopedAndSupportsAssignmentAndReviewStatusFilters()"
+      },
+      {
+        "class": "com.rce.lms.AdminReviewIntegrationTest",
+        "name": "memberForeignTrackMissingIdsAndMissingCsrfCannotReview()"
+      },
+      {
+        "class": "com.rce.lms.AdminReviewIntegrationTest",
+        "name": "rejectsFractionalOutOfRangeMissingScoresLongFeedbackAndForgedFields()"
+      },
+      {
+        "class": "com.rce.lms.AdminReviewIntegrationTest",
+        "name": "resubmittingAnApiReviewedSubmissionClearsReviewAndFiltersUpdate()"
+      },
+      {
+        "class": "com.rce.lms.AdminReviewIntegrationTest",
+        "name": "reviewAndRereviewUseServerReviewerPreserveContentFilesAndReachMember()"
+      },
+      {
+        "class": "com.rce.lms.AdminReviewIntegrationTest",
+        "name": "reviewWaitsForAssignmentLockAndLoadsLatestResubmittedContentAfterLock()"
+      },
+      {
+        "class": "com.rce.lms.AdminUserIntegrationTest",
+        "name": "concurrentDuplicateCreationHasOneWinnerAndOneUniformConflict()"
+      },
+      {
+        "class": "com.rce.lms.AdminUserIntegrationTest",
+        "name": "createsOwnTrackMemberWithHashedPasswordAndTheAccountCanLogIn()"
+      },
+      {
+        "class": "com.rce.lms.AdminUserIntegrationTest",
+        "name": "deactivationInvalidatesAnExistingSessionAndBlocksNewLogin()"
+      },
+      {
+        "class": "com.rce.lms.AdminUserIntegrationTest",
+        "name": "duplicateStudentIdsReturnConflictWithoutOverwritingExistingAccounts()"
+      },
+      {
+        "class": "com.rce.lms.AdminUserIntegrationTest",
+        "name": "emptyPatchesInvalidNamesAndInvalidPasswordLengthsAreRejectedWithoutPartialChanges()"
+      },
+      {
+        "class": "com.rce.lms.AdminUserIntegrationTest",
+        "name": "listContainsOnlyOwnTrackMembersEvenWhenClientAsksForAnotherTrack()"
+      },
+      {
+        "class": "com.rce.lms.AdminUserIntegrationTest",
+        "name": "membersCannotManageAccountsAndStaffCannotTargetStaffOrAnotherTrackMember()"
+      },
+      {
+        "class": "com.rce.lms.AdminUserIntegrationTest",
+        "name": "partialEditAndPasswordResetPreserveIdentityAndOnlyTheNewPasswordAuthenticates()"
+      },
+      {
+        "class": "com.rce.lms.AdminUserIntegrationTest",
+        "name": "privilegedAndImmutableFieldsAreRejectedBySeparateWriteDtos()"
+      },
+      {
+        "class": "com.rce.lms.AssignmentIntegrationTest",
+        "name": "malformedAndMissingIdsAreHandledAndPastDeadlinesRemainEditable()"
+      },
+      {
+        "class": "com.rce.lms.AssignmentIntegrationTest",
+        "name": "memberCannotUseAnyAdminAssignmentEndpoint()"
+      },
+      {
+        "class": "com.rce.lms.AssignmentIntegrationTest",
+        "name": "readRequiresLoginAndEveryMutationRequiresCsrf()"
+      },
+      {
+        "class": "com.rce.lms.AssignmentIntegrationTest",
+        "name": "rejectsClientOwnedTrackAuthorAndInvalidEditorInputs()"
+      },
+      {
+        "class": "com.rce.lms.AssignmentIntegrationTest",
+        "name": "staffCanUpdateAndDeleteOwnTrackButCannotReadOrMutateAnotherTrackById()"
+      },
+      {
+        "class": "com.rce.lms.AssignmentIntegrationTest",
+        "name": "staffCreatesPersistentOwnTrackAssignmentAndMembersSeeOnlyTheirTrack()"
+      },
+      {
+        "class": "com.rce.lms.AuthIntegrationTest",
+        "name": "csrfIsResolvedBeforeAuthenticationAndCookieHeaderFlowLogsIn()"
+      },
+      {
+        "class": "com.rce.lms.AuthIntegrationTest",
+        "name": "databaseDeactivationImmediatelyInvalidatesAnExistingSession()"
+      },
+      {
+        "class": "com.rce.lms.AuthIntegrationTest",
+        "name": "loginRejectsExtraBytesBeyondAValid72BytePasswordInsteadOfBcryptTruncation()"
+      },
+      {
+        "class": "com.rce.lms.AuthIntegrationTest",
+        "name": "loginRequiresCsrfAndRejectsInvalidToken()"
+      },
+      {
+        "class": "com.rce.lms.AuthIntegrationTest",
+        "name": "loginRotatesCsrfAndRejectsPreviousHeaderWithNewCookie()"
+      },
+      {
+        "class": "com.rce.lms.AuthIntegrationTest",
+        "name": "logoutInvalidatesSessionAndAllowsFreshAnonymousCsrf()"
+      },
+      {
+        "class": "com.rce.lms.AuthIntegrationTest",
+        "name": "memberCannotAccessAdminNamespace()"
+      },
+      {
+        "class": "com.rce.lms.AuthIntegrationTest",
+        "name": "wrongPasswordAndInactiveAccountDoNotCreateSessions()"
+      },
+      {
+        "class": "com.rce.lms.BootstrapIntegrationTest",
+        "name": "startsAgainstPostgresqlWithFlyway()"
+      },
+      {
+        "class": "com.rce.lms.FileApiIntegrationTest",
+        "name": "assignmentJsonEditPreservesAttachmentsAndMultipartDeleteRemovesPhysicalBytes()"
+      },
+      {
+        "class": "com.rce.lms.FileApiIntegrationTest",
+        "name": "combinedRetainedAndNewFilesCannotExceedFive()"
+      },
+      {
+        "class": "com.rce.lms.FileApiIntegrationTest",
+        "name": "fileOnlySubmissionIsPrivateToOwnerAndOwnTrackStaff()"
+      },
+      {
+        "class": "com.rce.lms.FileApiIntegrationTest",
+        "name": "forgedRetainedFilesRollbackUploadsAndKeepPriorSubmission()"
+      },
+      {
+        "class": "com.rce.lms.FileApiIntegrationTest",
+        "name": "multipartMutationsEnforceRoleTrackDeadlineCsrfAndUnknownFieldRules()"
+      },
+      {
+        "class": "com.rce.lms.FileApiIntegrationTest",
+        "name": "resubmissionCanRetainThenReplaceFilesAndJsonResubmissionClearsThem()"
+      },
+      {
+        "class": "com.rce.lms.FileApiIntegrationTest",
+        "name": "staffCreatesAssignmentWithPrivateAttachmentAndOwnTrackMembersDownloadIt()"
+      },
+      {
+        "class": "com.rce.lms.FileTransactionsIntegrationTest",
+        "name": "afterCommitDeleteFailureKeepsTheCommittedDatabaseAndNewFileAndRetriesFromTheQueue()"
+      },
+      {
+        "class": "com.rce.lms.FileTransactionsIntegrationTest",
+        "name": "databaseRollbackRemovesNewlySavedFilesButPreservesOldFiles()"
+      },
+      {
+        "class": "com.rce.lms.FileTransactionsIntegrationTest",
+        "name": "failedCleanupAfterRollbackIsQueuedAndRetriedWithoutRestoringTheRolledBackDatabase()"
+      },
+      {
+        "class": "com.rce.lms.FileTransactionsIntegrationTest",
+        "name": "failureDuringTheSecondSaveCleansTheFirstAndNeverRunsDatabaseWork()"
+      },
+      {
+        "class": "com.rce.lms.FileValidatorTest",
+        "name": "enforcesSizeUsingBothReportedLengthAndTheActualInputStream()"
+      },
+      {
+        "class": "com.rce.lms.FileValidatorTest",
+        "name": "extensionMimeAndSignatureMustAgree()"
+      },
+      {
+        "class": "com.rce.lms.FileValidatorTest",
+        "name": "rejectsEmptyBinaryTextAndMalformedUtf8ButAcceptsUnicodeText()"
+      },
+      {
+        "class": "com.rce.lms.FileValidatorTest",
+        "name": "rejectsTraversalMissingNamesAndInvisibleFilenameCharacters()"
+      },
+      {
+        "class": "com.rce.lms.FileValidatorTest",
+        "name": "supportedAttachmentsKeepTheirDisplayNameAndUseCanonicalContentTypes()"
+      },
+      {
+        "class": "com.rce.lms.FileValidatorTest",
+        "name": "validatesDecodedProfileCropsAndRejectsSmallNonSquareOrBrokenImages()"
+      },
+      {
+        "class": "com.rce.lms.LocalFileStorageTest",
+        "name": "createsPrivateUuidKeysAndRoundTripsOriginalBytesWithoutExposingDisplayNames()"
+      },
+      {
+        "class": "com.rce.lms.LocalFileStorageTest",
+        "name": "refusesSymbolicLinksForBothReadsAndDeletesAndLeavesTheTargetUntouched()"
+      },
+      {
+        "class": "com.rce.lms.LocalFileStorageTest",
+        "name": "rejectsTraversalAbsolutePathsDisplayNamesAndNonCanonicalKeys()"
+      },
+      {
+        "class": "com.rce.lms.NoticeIntegrationTest",
+        "name": "anonymousMemberMutationsAndMissingCsrfAreDenied()"
+      },
+      {
+        "class": "com.rce.lms.NoticeIntegrationTest",
+        "name": "everyAuthenticatedRoleSeesGlobalAndOwnTrackOnly()"
+      },
+      {
+        "class": "com.rce.lms.NoticeIntegrationTest",
+        "name": "globalNoticesAndForeignTrackNoticesAreImmutableToStaff()"
+      },
+      {
+        "class": "com.rce.lms.NoticeIntegrationTest",
+        "name": "importantComesFirstAndTimestampThenIdProvideDeterministicOrdering()"
+      },
+      {
+        "class": "com.rce.lms.NoticeIntegrationTest",
+        "name": "rejectsUnknownPrivilegeFieldsAndInvalidEditorData()"
+      },
+      {
+        "class": "com.rce.lms.NoticeIntegrationTest",
+        "name": "staffCreatesAutomaticTrackAndAuthorThenOwnTrackPeerCanEditAndDelete()"
+      },
+      {
+        "class": "com.rce.lms.PreferencesIntegrationTest",
+        "name": "authenticationCsrfAndCredentialRevocationApplyToPreferences()"
+      },
+      {
+        "class": "com.rce.lms.PreferencesIntegrationTest",
+        "name": "concurrentFirstSavesCreateOneRowAndEachRequestCommitsAllFourValues()"
+      },
+      {
+        "class": "com.rce.lms.PreferencesIntegrationTest",
+        "name": "memberAndStaffPreferencesPersistAcrossSessionsAndCanBeReplaced()"
+      },
+      {
+        "class": "com.rce.lms.PreferencesIntegrationTest",
+        "name": "missingNullAndCoercedValuesAreRejectedWithoutPartiallyUpdatingSettings()"
+      },
+      {
+        "class": "com.rce.lms.PreferencesIntegrationTest",
+        "name": "preferencesBelongOnlyToTheAuthenticatedUserAcrossTracksAndRoles()"
+      },
+      {
+        "class": "com.rce.lms.PreferencesIntegrationTest",
+        "name": "readReturnsOnlyFourDefaultsWithoutCreatingARow()"
+      },
+      {
+        "class": "com.rce.lms.PreferencesIntegrationTest",
+        "name": "writeRechecksActiveStatusAndCredentialVersionUnderTheUserLock()"
+      },
+      {
+        "class": "com.rce.lms.ProductionRestartIntegrationTest",
+        "name": "[1] profiles = \"prod,dev\""
+      },
+      {
+        "class": "com.rce.lms.ProductionRestartIntegrationTest",
+        "name": "[2] profiles = \"dev,prod\""
+      },
+      {
+        "class": "com.rce.lms.ProductionRestartIntegrationTest",
+        "name": "[3] profiles = \"production,dev\""
+      },
+      {
+        "class": "com.rce.lms.ProductionRestartIntegrationTest",
+        "name": "[4] profiles = \"dev,production\""
+      },
+      {
+        "class": "com.rce.lms.ProductionRestartIntegrationTest",
+        "name": "committedUsersAssignmentsSubmissionsScoresAndNoticesSurviveActualBackendRestart()"
+      },
+      {
+        "class": "com.rce.lms.ProfileIntegrationTest",
+        "name": "changingPasswordRevokesCurrentAndOtherSessionsAndOnlyNewPasswordAuthenticates()"
+      },
+      {
+        "class": "com.rce.lms.ProfileIntegrationTest",
+        "name": "currentPasswordMustMatchAllBytesAtTheBcryptBoundary()"
+      },
+      {
+        "class": "com.rce.lms.ProfileIntegrationTest",
+        "name": "invalidImagesAndMultipleUploadsKeepExistingImageAndDoNotLeakBytes()"
+      },
+      {
+        "class": "com.rce.lms.ProfileIntegrationTest",
+        "name": "invalidPasswordChangesPreserveHashSessionAndCredentialVersion()"
+      },
+      {
+        "class": "com.rce.lms.ProfileIntegrationTest",
+        "name": "profileEditPersistsAndReturnsTheSameCanonicalUserAsAuthAndAdmin()"
+      },
+      {
+        "class": "com.rce.lms.ProfileIntegrationTest",
+        "name": "rejectsInvalidProfilesPrivilegedFieldsAndRequestsWithoutAuthenticationOrCsrf()"
+      },
+      {
+        "class": "com.rce.lms.ProfileIntegrationTest",
+        "name": "replaceAndDeleteCommitMetadataAndCleanOldBytesWithIdempotentDelete()"
+      },
+      {
+        "class": "com.rce.lms.ProfileIntegrationTest",
+        "name": "staffPasswordResetRevokesAllExistingMemberSessionsBeforeCsrfValidation()"
+      },
+      {
+        "class": "com.rce.lms.ProfileIntegrationTest",
+        "name": "uploadedImageMetadataIsConsistentAndOnlyOwnerOrOwnTrackCanDownload()"
+      },
+      {
+        "class": "com.rce.lms.RankingIntegrationTest",
+        "name": "apiExposesExactlyTheSixRankingFieldsAndServerScopeOverridesForgedQueries()"
+      },
+      {
+        "class": "com.rce.lms.RankingIntegrationTest",
+        "name": "emptyStaffTrackReturnsAnEmptyListAndAnUngradedMemberStillHasRankOne()"
+      },
+      {
+        "class": "com.rce.lms.RankingIntegrationTest",
+        "name": "identicalNamesAndStatisticsUsePrivateUuidInsteadOfStudentIdForTheFinalTie()"
+      },
+      {
+        "class": "com.rce.lms.RankingIntegrationTest",
+        "name": "includesEveryActiveOwnTrackMemberAndCountsOnlyReviewedOwnTrackWork()"
+      },
+      {
+        "class": "com.rce.lms.RankingIntegrationTest",
+        "name": "reviewResubmissionAndRereviewImmediatelyChangeDerivedRankingThroughTheRealApis()"
+      },
+      {
+        "class": "com.rce.lms.RankingIntegrationTest",
+        "name": "roleAuthenticationAndCurrentActiveStateAreEnforced()"
+      },
+      {
+        "class": "com.rce.lms.RankingIntegrationTest",
+        "name": "sortsByTotalThenUnroundedAverageThenReviewedCountThenNameWithSequentialRanks()"
+      },
+      {
+        "class": "com.rce.lms.SessionBoundaryIntegrationTest",
+        "name": "clientCannotSupplyIdentityPrivilegesDuringLogin()"
+      },
+      {
+        "class": "com.rce.lms.SessionBoundaryIntegrationTest",
+        "name": "loginRotatesAnExistingSessionIdAndNeverExposesThePasswordHash()"
+      },
+      {
+        "class": "com.rce.lms.SubmissionIntegrationTest",
+        "name": "authenticationCsrfAndCurrentActiveStatusApplyToSubmissionEndpoints()"
+      },
+      {
+        "class": "com.rce.lms.SubmissionIntegrationTest",
+        "name": "expiredDeadlineRejectsResubmissionWithoutChangingStoredWork()"
+      },
+      {
+        "class": "com.rce.lms.SubmissionIntegrationTest",
+        "name": "optionalContentStillRequiresTextUntilFilePhaseAndRejectsForgedIdentityOrReviewFields()"
+      },
+      {
+        "class": "com.rce.lms.SubmissionIntegrationTest",
+        "name": "otherTrackIdsAndStaffLearnerEndpointsAreDenied()"
+      },
+      {
+        "class": "com.rce.lms.SubmissionIntegrationTest",
+        "name": "resubmissionReusesIdAndResetsEveryReviewFieldAndTimestamp()"
+      },
+      {
+        "class": "com.rce.lms.SubmissionIntegrationTest",
+        "name": "simultaneousSubmissionsSerializeAndKeepOneRecord()"
+      },
+      {
+        "class": "com.rce.lms.SubmissionIntegrationTest",
+        "name": "submissionsProtectAssignmentDeletionAtApiAndForeignKeyLevels()"
+      },
+      {
+        "class": "com.rce.lms.SubmissionIntegrationTest",
+        "name": "textSubmissionPersistsAndEveryReadIsOwnedByAuthenticatedMember()"
+      }
+    ]
+  },
+  "preservation": {
+    "developmentDatabase": "rce_lms",
+    "tableFingerprintsUnchanged": 9,
+    "usersPreserved": 6,
+    "assignmentsPreserved": 1,
+    "migrationSha256Unchanged": 7
+  },
+  "isolation": {
+    "browserBusinessStorageUses": 0,
+    "secretValueLeaksInSourceDocsAndBundle": 0,
+    "backendTestClassOrConfigLeaks": 0,
+    "removedPrototypeOrMockBundleMatches": 0
+  },
+  "npmAudit": {
+    "runtimeWarnings": 0,
+    "buildOnlyWarnings": 7,
+    "buildOnlyHigh": 5,
+    "buildOnlyModerate": 2,
+    "sourceMapJsPatchedVersion": "1.2.2"
+  }
+}

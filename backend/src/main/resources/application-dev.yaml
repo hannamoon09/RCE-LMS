@@ -1,0 +1,12 @@
+spring:
+  config:
+    activate:
+      on-profile: "dev & !test & !prod & !production"
+server:
+  servlet:
+    session:
+      cookie:
+        secure: ${SESSION_COOKIE_SECURE:false}
+app:
+  session-cookie-secure: ${SESSION_COOKIE_SECURE:false}
+  dev-seed-password: ${DEV_SEED_PASSWORD:}
