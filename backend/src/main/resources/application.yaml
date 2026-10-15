@@ -45,6 +45,9 @@ spring:
   jpa:
     show-sql: false
 server:
+  forward-headers-strategy: native
+  tomcat:
+    redirect-context-root: false
   servlet:
     session:
       cookie:

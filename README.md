@@ -62,6 +62,7 @@ npm --prefix frontend run dev -- --port 5173 --strictPort
 | `SERVER_ADDRESS` | 백엔드 바인딩 주소. 생성되는 로컬 환경은 `127.0.0.1` |
 | `API_PROXY_TARGET` | Vite 개발 프록시 대상. 기본 `http://localhost:8080` |
 | `TEST_DB_URL` | 백엔드 검사 전용 JDBC URL. 경로가 `/rce_lms_test`로 끝나야 함 |
+| `BACKEND_ORIGIN` | Vercel 설정 평가 시 사용할 Railway 공개 HTTPS origin. `/api` 경로 없이 지정하며 `VITE_` 접두사를 붙이지 않음 |
 
 ## 검증과 빌드
 
@@ -116,10 +117,12 @@ frontend/                  React / Vite / TypeScript 프론트엔드
   playwright*.config.ts    브라우저 검사 설정
   dist/, node_modules/, test-results/  생성 파일과 검사 결과
 backend/                   Spring Boot 4.1.1 / Java 21 / JPA / Security
+  Dockerfile               Railway용 Java 21 빌드·실행 이미지
   src/main/resources/db/migration/  Flyway SQL
 scripts/                   공통 로컬 환경·백엔드·검사 실행
 docs/                      API 계약·구현 기록·화면 검증 자료
 deploy/nginx.conf          동일 출처 HTTPS 배포 예시
+DEPLOYMENT.md              Railway + Vercel 첫 배포 단계별 안내
 compose.yaml               PostgreSQL 개발 환경
 .env, .env.example         공통 로컬 환경 설정과 변수 이름 예시
 backend-data/              비공개 로컬 업로드 원본
@@ -178,7 +181,9 @@ HTTP 세션을 사용합니다. `JSESSIONID`는 HttpOnly·SameSite=Lax이며 `pr
 
 ## 운영 배포
 
-[Nginx 예시](deploy/nginx.conf)는 `frontend/dist/`의 빌드 결과만 `/srv/rce-lms/frontend/dist`에 배포해 서비스하고 `/api/`를 내부 Spring Boot로 전달하는 동일 출처 HTTPS 구성을 설명합니다. 실제 도메인·인증서·경로를 운영 환경에 맞게 지정하세요. API와 프론트엔드를 같은 출처로 제공하므로 개발용 전체 CORS 허용 설정을 추가할 필요가 없습니다. 저장소 전체나 업로드 디렉터리를 정적 경로로 공개하지 않습니다.
+Private Beta의 권장 구성은 **Vercel Frontend + Railway Backend/PostgreSQL/Volume**입니다. 처음 배포할 때는 [DEPLOYMENT.md](DEPLOYMENT.md)를 따라갑니다. Railway Root Directory는 `/backend`, Vercel Root Directory는 `frontend`입니다. Vercel의 [`vercel.mjs`](frontend/vercel.mjs)가 환경변수 `BACKEND_ORIGIN`으로 `/api`를 전달합니다. 실제 계정·Secret·배포 버튼은 사용자가 설정하고 실행합니다.
+
+자가 호스팅용 [Nginx 예시](deploy/nginx.conf)도 보존되어 있습니다. `frontend/dist/`만 `/srv/rce-lms/frontend/dist`에서 서비스하고 `/api/`를 내부 Spring Boot로 전달하는 구성입니다. 어느 방식에서도 브라우저의 API 요청은 같은 출처를 사용하며 전체 CORS 허용 설정을 추가하지 않습니다. 저장소 전체나 업로드 디렉터리를 정적 경로로 공개하지 않습니다.
 
 운영 DB의 `DB_URL`·`DB_USERNAME`·`DB_PASSWORD`와 웹 루트 밖의 영속 `FILE_STORAGE_PATH`를 배포 환경의 비밀 설정으로 주입한 뒤, 프로젝트 루트 기준으로 실행합니다. 개발용 `.env`나 개발 백엔드 스크립트를 운영에 사용하지 않습니다.
 
@@ -186,7 +191,7 @@ HTTP 세션을 사용합니다. `JSESSIONID`는 HttpOnly·SameSite=Lax이며 `pr
 SPRING_PROFILES_ACTIVE=prod java -jar backend/build/libs/rce-lms-backend-0.1.0.jar
 ```
 
-`production`도 같은 운영 설정을 적용하는 별칭입니다. 두 운영 프로필에서는 개발 seed가 실행되지 않고 세션·CSRF 쿠키 Secure가 활성화되며, debug와 SQL 출력이 꺼집니다. `FILE_STORAGE_PATH`는 필수이고, Flyway와 Hibernate `ddl-auto=validate`, 실제 Session/CSRF 검증은 유지됩니다. 첫 STAFF는 서버를 시작하기만 해서는 생성되지 않으며 운영자가 [계정 발급 절차](docs/staff-provisioning.md)를 명시적으로 실행합니다. `.env`, 비밀번호, 데이터베이스 덤프와 파일 원본은 공개 `frontend/dist/`에 넣지 않습니다. 백엔드와 DB 포트는 신뢰된 내부 연결에만 열고 HTTPS 프록시가 외부 요청을 받도록 구성합니다.
+`production`도 같은 운영 설정을 적용하는 별칭입니다. 두 운영 프로필에서는 개발 seed가 실행되지 않고 세션·CSRF 쿠키 Secure가 활성화되며, debug와 SQL 출력이 꺼집니다. `FILE_STORAGE_PATH`는 필수이고, Flyway와 Hibernate `ddl-auto=validate`, 실제 Session/CSRF 검증은 유지됩니다. 첫 STAFF는 서버를 시작하기만 해서는 생성되지 않으며 운영자가 [계정 발급 절차](docs/staff-provisioning.md)의 로컬 터미널 도구를 명시적으로 실행합니다. `.env`, 비밀번호, 데이터베이스 덤프와 파일 원본은 공개 `frontend/dist/`에 넣지 않습니다. Backend는 Railway의 공개 HTTPS endpoint를 통해 Vercel과 통신하고 DB는 내부 네트워크로 연결합니다. 최초 계정 발급 등 신뢰된 운영 작업의 공개 DB 접속은 별도 절차를 따릅니다.
 
 기본 세션 저장소는 백엔드 프로세스 메모리입니다. 재시작하면 다시 로그인해야 합니다. 다중 인스턴스 간 공유 세션은 현재 구성에 포함되어 있지 않습니다.
 

@@ -4,6 +4,45 @@
 
 로컬 개발에서는 [README의 개발 계정](../README.md#개발-계정)을 사용합니다. 운영 DB에 개발 계정을 만들기 위해 `dev` 프로필이나 `DEV_SEED_PASSWORD`를 사용하지 않습니다.
 
+## 처음 발급할 때: 로컬 터미널 도구
+
+[provision-staff.sh](../scripts/provision-staff.sh)는 아래의 해시 생성·파라미터 INSERT 절차를 대신 실행하는 운영자 전용 도구입니다. 웹사이트의 기능이나 공개 API가 아니며, [Java 도구 소스](../backend/tools/ProvisionStaff.java)는 운영 JAR에 포함되지 않습니다. 이 도구는 기존 계정을 수정하거나 승격하지 않고, 마지막 확인을 입력한 경우에만 STAFF 한 명을 등록합니다.
+
+먼저 Railway backend가 정상 시작하여 운영 DB에 Flyway V1~V7을 적용했는지 확인합니다. 준비된 프로젝트 소스와 **JDK 21**이 있는 본인 컴퓨터의 Terminal에서 실행하세요. Railway 웹 로그 화면이나 채팅창에 비밀번호를 입력하지 않습니다.
+
+1. Railway 프로젝트의 **Postgres → Settings → Networking**에서 외부 연결용 Public Access/TCP Proxy를 확인합니다. 외부 연결이 없다면 발급 작업을 위해 추가합니다. 공개 호스트와 공개 포트, DB 이름, DB 사용자명과 DB 비밀번호를 Railway 화면에서 직접 확인합니다. 로컬 도구에는 `postgres.railway.internal` 주소를 사용할 수 없습니다. 앱 서비스의 기존 private DB 연결 설정은 바꾸지 않습니다. [Railway PostgreSQL 연결 안내](https://docs.railway.com/databases/postgresql)
+2. Terminal에서 프로젝트 폴더로 이동하고 아래 명령을 실행합니다. macOS에서는 첫 줄이 설치된 JDK 21을 선택합니다. 다른 환경에서는 `JAVA_HOME`을 설치한 JDK 21 폴더로 설정한 다음 두 번째 명령을 실행합니다.
+
+   ```sh
+   export JAVA_HOME="$(/usr/libexec/java_home -v 21)"
+   bash scripts/provision-staff.sh
+   ```
+
+3. 도구가 묻는 연결 정보와 새 STAFF 정보를 입력합니다. 첫 JDBC URL에는 아래처럼 **공개 호스트·공개 포트·DB 이름만** 넣습니다. 꺾쇠괄호 부분을 실제 값으로 바꾸고, 사용자명이나 비밀번호는 URL에 넣지 않습니다.
+
+   ```text
+   jdbc:postgresql://<공개호스트>:<공개포트>/<DB이름>?sslmode=require
+   ```
+
+   DB 비밀번호와 STAFF 초기 비밀번호는 입력해도 글자가 표시되지 않습니다. 이는 정상입니다. STAFF 비밀번호는 두 번 입력하며, DB 비밀번호와 별개의 새 비밀번호를 정합니다. 분야는 `WEB`, `PWN`, `REVERSING`, `FORENSICS` 중 하나를 대문자로 입력합니다.
+
+4. 표시된 연결 주소·DB·학번·이름·분야를 확인합니다. 정확하면 **`CREATE STAFF`**를 입력합니다. 다른 문자를 입력하거나 그 전에 `Ctrl+C`를 누르면 등록을 취소합니다. 기존 학번이 있으면 롤백하며 기존 계정은 변경하지 않습니다. 성공 화면에는 ID·학번·분야만 표시하고 비밀번호나 해시는 표시하지 않습니다.
+5. 아래의 **발급 후 확인** 절차로 실제 HTTPS 로그인과 비밀번호 변경을 확인합니다. 외부 DB 접근을 발급용으로만 추가했다면 발급이 끝난 후 그 Public Access/TCP Proxy만 제거할 수 있습니다. 다른 관리 도구가 사용하는 외부 연결인지 먼저 확인하세요.
+
+도구는 `.env`를 읽지 않으며, 비밀번호를 명령 인자·파일에 저장하지 않습니다. 실행 전에 현재 소스로 `bootJar`를 빌드하고 해당 JAR의 라이브러리만 권한이 제한된 임시 폴더에 풀어 사용한 뒤 정리합니다. 서버를 시작하거나 migration을 실행하지 않습니다. 오류에 SQL 값이나 JDBC 상세 메시지를 출력하지 않습니다.
+
+외부 연결은 TLS 옵션 `sslmode=require`, `verify-ca`, `verify-full`만 허용합니다. `require`는 전송을 암호화하지만 서버 인증서의 신원을 검증하지 않습니다. 운영 환경에 검증 가능한 인증서가 준비되어 있다면 `verify-full`을 사용하세요. `localhost` 등 루프백 주소에서는 전용 로컬 테스트 DB 확인을 위해 TLS 없는 연결도 허용합니다.
+
+| 화면 메시지 | 다음 행동 |
+| --- | --- |
+| JDK 21 필요 | JDK 21을 설치하거나 `JAVA_HOME`을 JDK 21 폴더로 지정 |
+| DB 연결 또는 스키마 확인 실패 | 공개 호스트·공개 포트·DB 사용자명·비밀번호와 backend의 Flyway 완료 여부 확인 |
+| 중복 학번 또는 ID | 기존 계정을 확인하고 필요하면 다른 새 학번으로 다시 실행. 기존 계정을 덮어쓰지 않음 |
+| 입력 오류 / 비밀번호 불일치 | 조건에 맞게 처음부터 다시 입력. INSERT 전 오류이므로 신규 계정 없음 |
+| 커밋 결과를 확인할 수 없음 | 화면의 ID 또는 학번으로 DB에 등록됐는지 먼저 확인한 후 후속 작업 결정 |
+
+아래 내용은 도구가 수행하는 절차와 별도 신뢰 DB 클라이언트를 사용할 때의 기준입니다.
+
 ## 준비할 값
 
 Flyway 마이그레이션이 적용된 운영 DB에서 작업합니다. 다음 값은 운영자가 확인합니다.
