@@ -2,9 +2,9 @@
 
 준비 시작: 2026-10-14 · 최종 정리: 2026-10-16 · 대상: 동아리 Private Beta
 
-이 문서는 **사용자가 직접 클릭·입력·배포하는 안내서**입니다. 계정 생성, 요금제 선택, Secret 입력, 서비스 생성, Deploy, DNS 변경은 아직 실행하지 않았습니다. 채팅에서는 아래 작업을 한 단계씩 진행합니다. 다음 단계로 넘어가기 전에 해당 단계의 확인 결과를 알려주세요. 비밀번호·토큰·쿠키 값은 채팅이나 스크린샷에 포함하지 않습니다.
+이 문서는 **사용자가 직접 클릭·입력·배포하는 안내서**입니다. 계정 생성, 요금제 선택, Secret 입력, 서비스 생성, Deploy, DNS 변경은 사용자가 수행합니다. 채팅에서는 아래 작업을 한 단계씩 진행합니다. 다음 단계로 넘어가기 전에 해당 단계의 확인 결과를 알려주세요. 비밀번호·토큰·쿠키 값은 채팅이나 스크린샷에 포함하지 않습니다.
 
-코드·문서 준비와 로컬 검증은 완료했습니다. 실제 클라우드 배포와 smoke test는 사용자 실행 대기 상태입니다. 완료한 검증과 아직 확인하지 않은 항목은 [배포 준비 검증 기록](docs/deployment-prep-verification.md)에 구분했습니다.
+코드·문서 준비와 로컬 검증은 완료했습니다. 2026-10-16 사용자 화면에서 Railway 프로젝트 생성과 PostgreSQL 18의 Online 상태·DB 볼륨 연결을 확인했습니다. 다음은 Backend 빈 서비스 생성이며, Backend·Frontend 배포와 smoke test는 사용자 실행 대기 상태입니다. 완료한 검증과 아직 확인하지 않은 항목은 [배포 준비 검증 기록](docs/deployment-prep-verification.md)에 구분했습니다.
 
 ## 배포 구성
 
@@ -45,7 +45,7 @@ Railway의 기존 Config as Code는 신규 서비스에서 사용할 수 없고 
 
 1. [Railway](https://railway.com/dashboard)에 로그인합니다.
 2. **New Project**를 선택하고 **Empty Project**로 빈 프로젝트를 만듭니다.
-3. 프로젝트 이름을 `rce-lms`로 정합니다.
+3. 프로젝트 이름은 `rce-lms`를 권장합니다. 이미 자동 생성된 이름을 사용 중이면 그대로 진행해도 됩니다.
 4. 이후 모든 서비스는 이 프로젝트의 같은 환경(처음에는 `production`)에 둡니다.
 
 여기까지 한 뒤 채팅에 알려주세요. 아직 서비스를 한꺼번에 추가할 필요가 없습니다. 버튼 이름이 다르면 화면을 보내주세요.
@@ -54,16 +54,16 @@ Railway의 기존 Config as Code는 신규 서비스에서 사용할 수 없고 
 
 ## 3. PostgreSQL 생성
 
-**Codex 준비:** V1~V7 migration과 JDBC 환경변수 연결 방법을 확인했습니다. 로컬 검증 DB는 PostgreSQL 17입니다.
+**Codex 준비:** V1~V7 migration과 JDBC 환경변수 연결 방법을 확인했습니다. PostgreSQL 17에서 전체 배포 준비 검증을 완료했고, 사용자 DB 버전에 맞춰 PostgreSQL 18.6에서 기존 Backend 이미지의 기동·migration·읽기/쓰기를 추가 검증했습니다.
 
 **사용자 작업:**
 
-1. `rce-lms` 프로젝트 화면에서 **New**(또는 추가 메뉴)를 엽니다.
+1. 앞서 만든 프로젝트 화면에서 **New**(또는 추가 메뉴)를 엽니다.
 2. **Database → PostgreSQL**을 선택합니다.
 3. 생성된 DB 서비스 이름을 확인합니다. 아래 표는 이름이 **Postgres**라고 가정합니다.
 4. 서비스가 실행되면 **Variables**에서 `PGDATABASE`, `PGUSER`, `PGPASSWORD`, `RAILWAY_PRIVATE_DOMAIN`이 있는지 확인합니다. 값은 채팅에 보내지 않습니다.
 5. DB 서비스의 Volume이 연결되어 있는지 확인합니다. DB용 볼륨을 업로드 볼륨으로 재사용하지 않습니다.
-6. **Settings → Source**에서 PostgreSQL 이미지와 버전을 확인합니다. 아직 한 번도 DB가 실행되지 않았고 이미지 버전을 지정할 수 있다면 `ghcr.io/railwayapp-templates/postgres-ssl:17`로 로컬 검증 버전과 맞춥니다. 템플릿이 자동으로 다른 major 버전을 실행했다면 그 상태로 버전을 알려주세요. 초기화된 DB 볼륨에 다른 major 이미지로 덮어 실행하지 않습니다. [공식 PostgreSQL 이미지](https://github.com/railwayapp-templates/postgres-ssl)
+6. **Settings → Source**에서 PostgreSQL 이미지와 버전을 확인합니다. 현재 사용자 DB는 `ghcr.io/railwayapp-templates/postgres-ssl:18`로 실행 중이며 이 버전을 유지합니다. PostgreSQL 17·18 이외의 major 버전이라면 먼저 호환성을 확인합니다. 초기화된 DB 볼륨에 다른 major 이미지로 덮어 실행하지 않습니다. [공식 PostgreSQL 이미지](https://github.com/railwayapp-templates/postgres-ssl)
 
 Backend와 DB는 같은 프로젝트·환경, 가능하면 같은 리전에 둡니다. 애플리케이션 연결에는 공개 주소 대신 내부 네트워크를 사용합니다. [PostgreSQL](https://docs.railway.com/databases/postgresql)
 

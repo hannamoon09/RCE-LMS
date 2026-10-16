@@ -2,9 +2,9 @@
 
 최종 기록일: 2026-10-16 (Asia/Seoul)
 
-판정: **코드·문서 배포 준비 완료 / 실제 클라우드 배포 미실행**.
+판정: **코드·문서 배포 준비 완료 / 사용자 Railway DB 생성 완료 / Backend·Frontend 배포 대기**.
 
-중단 전에 완료한 검증 결과를 보존하고, 재개 후에는 기존 성공 검사를 반복하지 않았습니다. 최초 저장소 감사와 빌드 근거는 [저장소 감사](repository-upload-audit.md), 실제 클릭·입력 절차는 [DEPLOYMENT.md](../DEPLOYMENT.md)에 있습니다.
+중단 전에 완료한 검증 결과를 보존하고, 재개 후에는 기존 성공 검사를 반복하지 않았습니다. 사용자 DB가 PostgreSQL 18로 생성되어 해당 버전의 호환성만 추가 검증했습니다. 최초 저장소 감사와 빌드 근거는 [저장소 감사](repository-upload-audit.md), 실제 클릭·입력 절차는 [DEPLOYMENT.md](../DEPLOYMENT.md)에 있습니다.
 
 ## 최종 업로드 점검
 
@@ -28,6 +28,19 @@
 - 재기동 후에도 migration 7개 유지.
 
 검증에서 생성한 컨테이너·네트워크·볼륨은 모두 정리했습니다. 기존 개발 DB/업로드와 실제 운영 DB는 수정하지 않았습니다. 이 검증은 Railway 자체를 배포한 결과가 아닙니다.
+
+## PostgreSQL 18 추가 호환성 확인
+
+2026-10-16 사용자 화면에서 Railway Postgres의 이미지 `ghcr.io/railwayapp-templates/postgres-ssl:18`, Online 상태, `postgres-volume` 연결을 확인했습니다. 이미 초기화된 DB의 major 버전은 변경하지 않습니다.
+
+기존 Backend 이미지 `rce-lms-deploy-check:20261014`를 재빌드 없이 사용해, 별도의 로컬 `postgres:18-alpine`(실제 서버 버전 **18.6**)에서 다음을 포함한 **9개 assertion**을 통과했습니다.
+
+- `prod` 기동, `PORT=18080`, `/api/health` 200 및 `UP` 응답.
+- Hibernate 스키마 검증과 Flyway migration 7개 적용 성공.
+- 개발 seed 환경변수를 주입해도 사용자 0개 유지.
+- DB 제약조건을 만족하는 임시 사용자 쓰기·읽기 성공, 트랜잭션 롤백 후 사용자 0개 유지.
+
+검사용 컨테이너·네트워크·DB 볼륨과 이번에 받은 DB 이미지를 정리했습니다. 기존 개발 DB와 Railway에는 접근하지 않았습니다. 이 결과는 PostgreSQL 18 자체의 호환성 확인이며 Railway 이미지의 SSL 설정·내부 네트워크 연결·실제 배포 성공은 Backend 배포 때 확인합니다.
 
 ## Vercel 설정
 
@@ -62,7 +75,7 @@ Vercel 프로젝트 생성·계정 설정·클라우드 배포를 수행하지 �
 
 아래 항목은 **미실행**이며 [가이드의 smoke test](../DEPLOYMENT.md#13-최소-smoke-test와-영속성-확인)로 사용자가 확인합니다.
 
-- 실제 Railway 서비스·DB·Volume과 Vercel 프로젝트 설정, HTTPS 접속.
+- 실제 Railway Backend·업로드 Volume과 Vercel 프로젝트 설정, HTTPS 접속. DB Online·DB 볼륨 연결은 사용자 화면으로 확인했으며, Backend에서의 DB 연결은 아직 미확인.
 - Vercel → Railway의 `/api` 전달, 로그인·CSRF·복수 Set-Cookie·로그아웃.
 - 현재 정책 상한인 파일당 10MiB·최대 5개 업로드와 다운로드. 로컬의 작은 파일 성공이 클라우드 상한 성공을 의미하지 않습니다.
 - 실제 Backend 재배포 후 DB·파일 유지, DB 서비스 재시작 후 데이터 유지.
