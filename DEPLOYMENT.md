@@ -4,7 +4,7 @@
 
 이 문서는 **사용자가 직접 클릭·입력·배포하는 안내서**입니다. 계정 생성, 요금제 선택, Secret 입력, 서비스 생성, Deploy, DNS 변경은 사용자가 수행합니다. 채팅에서는 아래 작업을 한 단계씩 진행합니다. 다음 단계로 넘어가기 전에 해당 단계의 확인 결과를 알려주세요. 비밀번호·토큰·쿠키 값은 채팅이나 스크린샷에 포함하지 않습니다.
 
-Railway Backend와 PostgreSQL 배포는 완료했고, 2026-10-17 공개 `/api/health`의 HTTP 200 및 `UP` 응답까지 확인했습니다. Vercel은 최신 소스 배포 중 설정 스키마 오류가 발생해 2026-10-18 설정을 수정하고 로컬 검증을 마쳤습니다. 현재 다음 단계는 **수정 커밋을 사용자가 push해 Vercel 배포 결과를 확인하는 것**입니다. 최신 프런트엔드 배포와 운영 로그인·파일 영속성 smoke test는 아직 완료되지 않았습니다. 상세 근거는 [배포 준비 검증 기록](docs/deployment-prep-verification.md)에 구분했습니다.
+2026-10-18 `032b31d`의 Vercel·Railway 배포, 공개 HTTPS와 `/api/health`·CSRF 응답을 확인했습니다. 사용자는 최초 STAFF 계정을 발급하고 로그인 후 대시보드 접근까지 확인했습니다. 사용하지 않는 Railway `mindful-adventure / RCE-LMS`의 Git 연결도 사용자가 해제했습니다. 현재는 **1.0.0 릴리스 커밋·태그를 준비하는 단계**이며, 운영 환경의 파일 영속성과 나머지 최소 업무 흐름은 추가 확인이 필요합니다. 상세 근거는 [배포 검증 기록](docs/deployment-prep-verification.md)에 구분했습니다.
 
 ## 배포 구성
 
@@ -242,9 +242,9 @@ Vercel HTTPS 화면에서 브라우저 개발자 도구를 엽니다. Network와
 
 ## 13. 최소 Smoke Test와 영속성 확인
 
-**Codex 준비:** 로컬 검증과 아래 점검 절차를 제공합니다. 실제 Vercel/Railway 결과는 아직 미확인입니다.
+**현재 확인:** Vercel·Railway 배포, HTTPS, `/api/health`·CSRF, STAFF 로그인·대시보드 접근까지 확인했습니다. 아래 MEMBER 업무 흐름과 파일 영속성 점검은 아직 완료되지 않았습니다.
 
-**사용자 작업:** 본인 관리하의 Beta Test STAFF와 MEMBER를 사용합니다. 실제 학생 과제나 제출을 수정하지 않습니다. STAFF 분야 안에 `[BETA SMOKE]`로 시작하는 테스트 과제 하나를 만들고, 다른 시크릿 창에서 MEMBER로 접속합니다.
+**사용자 작업:** 본인 관리하의 Beta Test STAFF와 MEMBER를 사용합니다. 실제 학생 과제나 제출을 수정하지 않습니다. STAFF 분야 안에 `[BETA SMOKE]`로 시작하는 테스트 과제 하나를 만듭니다. 두 계정은 일반 창과 시크릿 창 또는 별도 브라우저 프로필로 구분합니다. 같은 브라우저의 시크릿 창끼리는 세션이 공유될 수 있으므로 창만 추가해 역할을 나누지 않습니다.
 
 | 순서 | 작업 | 성공 조건 |
 | --- | --- | --- |
@@ -291,6 +291,16 @@ Vercel HTTPS 화면에서 브라우저 개발자 도구를 엽니다. Network와
 ```
 
 Vercel Production Branch와 Railway Service Source Branch가 모두 `main`인지 확인합니다. 실제 DB migration을 바꾸는 릴리스는 이전 migration을 수정하지 않고 새 파일을 추가합니다. 두 서비스의 배포 완료 순서는 보장되지 않으므로 API 변경은 이전 프런트엔드와도 호환되도록 계획합니다.
+
+### 1.0.0 릴리스 올리기
+
+로컬 릴리스 커밋 `chore: release v1.0.0`과 annotated tag `v1.0.0`을 만든 뒤, 사용자가 저장소 루트에서 다음 명령으로 둘을 함께 올립니다. 이미 만들어진 태그를 다시 생성하거나 덮어쓰지 않습니다.
+
+```sh
+git push --atomic origin main v1.0.0
+```
+
+`main` push가 연결된 Vercel·Railway 자동 배포를 시작합니다. 태그는 해당 소스를 `v1.0.0`으로 찾기 위한 기준점입니다. 양쪽 배포 화면에서 릴리스 커밋과 성공 상태를 확인한 후 [운영 사이트](https://rce-lms.vercel.app)에 접속합니다. Backend 재배포로 기존 세션이 끝나면 다시 로그인합니다. GitHub Release 소개 페이지 작성은 선택 사항이며 별도의 앱 배포를 시작하는 절차가 아닙니다.
 
 평소 로컬 확인 명령(저장소 루트):
 

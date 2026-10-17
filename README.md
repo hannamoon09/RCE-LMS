@@ -4,6 +4,8 @@
 
 GitHub 업로드 전 파일·Secret·기존 이력 검사와 현재 진행 상태는 [저장소 업로드 감사](docs/repository-upload-audit.md)에 기록합니다.
 
+현재 버전은 **1.0.0**입니다. 변경 내역은 [CHANGELOG.md](CHANGELOG.md), 실제 배포 확인 범위와 남은 점검은 [배포 검증 기록](docs/deployment-prep-verification.md)을 참고하세요.
+
 ## 로컬 실행
 
 Node.js 22.12 이상, Java 21 JDK, Docker와 Docker Compose가 필요합니다. `JAVA_HOME`은 Java 21을 가리켜야 하며 Gradle은 저장소의 9.5.1 Wrapper를 사용합니다. PostgreSQL 17은 Compose로 실행합니다.
@@ -95,7 +97,7 @@ cd backend
 ./gradlew bootJar
 ```
 
-결과는 `backend/build/libs/rce-lms-backend-0.1.0.jar`입니다. 전체 백엔드 검증은 루트에서 앞의 `npm --prefix frontend run test:backend` 명령을 사용합니다.
+결과는 `backend/build/libs/rce-lms-backend-1.0.0.jar`입니다. 전체 백엔드 검증은 루트에서 앞의 `npm --prefix frontend run test:backend` 명령을 사용합니다.
 
 2026-10-07 검증 결과: 백엔드 전체 89개 검사 통과, 브라우저 전체 90개 검사 통과 후 추가 보안 검사 1개와 관련 파일 검사 3개 통과로 서로 다른 브라우저 검사 총 91개를 확인했습니다. 최종 프론트엔드 빌드, 개발 환경 초기화 동작, Nginx 설정 문법 검사도 통과했습니다. 이는 2026-10-12 폴더 분리 전 완료한 검증 기록입니다. 폴더 분리 후에는 프론트엔드 빌드·백엔드 bootJar와 관련 회귀 검사 17개를 확인했습니다. 이 수치는 이전 단계의 기록이며 현재 cleanup 검증 결과는 [운영 정리 감사 보고서](docs/production-cleanup-audit.md)를 확인하세요. 단계별 근거는 [구현 진행 기록](docs/implementation-progress.md)에 있습니다. 현재 브라우저 실패 자료 경로는 `frontend/test-results/e2e/`, 백엔드 HTML 보고서는 `backend/build/reports/tests/test/`, 보존된 화면 검증 자료는 [docs/verification](docs/verification/)에 있습니다.
 
@@ -188,7 +190,7 @@ Private Beta의 권장 구성은 **Vercel Frontend + Railway Backend/PostgreSQL/
 운영 DB의 `DB_URL`·`DB_USERNAME`·`DB_PASSWORD`와 웹 루트 밖의 영속 `FILE_STORAGE_PATH`를 배포 환경의 비밀 설정으로 주입한 뒤, 프로젝트 루트 기준으로 실행합니다. 개발용 `.env`나 개발 백엔드 스크립트를 운영에 사용하지 않습니다.
 
 ```sh
-SPRING_PROFILES_ACTIVE=prod java -jar backend/build/libs/rce-lms-backend-0.1.0.jar
+SPRING_PROFILES_ACTIVE=prod java -jar backend/build/libs/rce-lms-backend-1.0.0.jar
 ```
 
 `production`도 같은 운영 설정을 적용하는 별칭입니다. 두 운영 프로필에서는 개발 seed가 실행되지 않고 세션·CSRF 쿠키 Secure가 활성화되며, debug와 SQL 출력이 꺼집니다. `FILE_STORAGE_PATH`는 필수이고, Flyway와 Hibernate `ddl-auto=validate`, 실제 Session/CSRF 검증은 유지됩니다. 첫 STAFF는 서버를 시작하기만 해서는 생성되지 않으며 운영자가 [계정 발급 절차](docs/staff-provisioning.md)의 로컬 터미널 도구를 명시적으로 실행합니다. `.env`, 비밀번호, 데이터베이스 덤프와 파일 원본은 공개 `frontend/dist/`에 넣지 않습니다. Backend는 Railway의 공개 HTTPS endpoint를 통해 Vercel과 통신하고 DB는 내부 네트워크로 연결합니다. 최초 계정 발급 등 신뢰된 운영 작업의 공개 DB 접속은 별도 절차를 따릅니다.
@@ -197,6 +199,6 @@ SPRING_PROFILES_ACTIVE=prod java -jar backend/build/libs/rce-lms-backend-0.1.0.j
 
 PostgreSQL 영속 볼륨과 `FILE_STORAGE_PATH`의 원본을 함께 백업합니다. 쓰기 작업을 잠시 멈추거나 일관된 스냅샷 절차를 사용해 같은 시점의 메타데이터·파일 쌍을 확보하고, 복구 시 둘을 함께 복원합니다. DB만 복원하면 파일 참조가 실제 원본과 어긋날 수 있습니다. `file_cleanup_jobs`도 DB 백업에 포함하며 배포 시 업로드 디렉터리를 덮어쓰지 않습니다.
 
-이 저장소에는 실행·검증·배포 예시가 준비되어 있습니다. 실제 운영 호스트 배포와 도메인·TLS 설정은 수행하지 않았습니다.
+사용자가 Vercel·Railway 배포와 최초 STAFF 로그인을 완료했습니다. 운영 환경의 파일 업로드·재배포 후 영속성 및 전체 최소 업무 흐름은 추가 확인이 필요합니다. 확인된 결과와 미확인 항목은 [배포 검증 기록](docs/deployment-prep-verification.md)에 구분했습니다.
 
 Phase 1~12 구현 기록은 [구현 보고서](docs/implementation-result.md), 이후 Mock·개발 데이터·보안 설정 정리와 최신 검증 결과 및 개발 도구 의존성 감사는 [운영 정리 감사 보고서](docs/production-cleanup-audit.md)에 정리합니다.

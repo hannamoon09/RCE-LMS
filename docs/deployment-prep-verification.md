@@ -2,7 +2,7 @@
 
 최종 기록일: 2026-10-18 (Asia/Seoul)
 
-판정: **Railway Backend·DB 배포 및 공개 Health 확인 완료 / Vercel 설정 수정·로컬 검증 완료 / 수정 커밋 push 및 실제 Vercel 배포 확인 대기**.
+판정: **`032b31d`의 Vercel·Railway 배포와 STAFF 로그인·대시보드 확인 완료 / 1.0.0 릴리스 준비 / 운영 파일 영속성 및 나머지 smoke test 확인 대기**.
 
 중단 전에 완료한 Backend·DB·전체 E2E 검증 결과를 보존했습니다. 10월 16일에는 사용자 DB 버전에 맞춰 PostgreSQL 18 호환성을, 10월 18일에는 실패한 Vercel 설정과 추가된 의존성의 프런트엔드 빌드만 추가 검증했습니다. 최초 저장소 감사와 빌드 근거는 [저장소 감사](repository-upload-audit.md), 실제 클릭·입력 절차는 [DEPLOYMENT.md](../DEPLOYMENT.md)에 있습니다.
 
@@ -69,15 +69,19 @@
 - Node **22.23.3**에서 `npm ci` 및 `npm run build` 성공(TypeScript + Vite **7.3.6**).
 - Backend 코드·설정·migration 변경 없음. 기존 Backend·DB·전체 E2E 검사는 반복하지 않음.
 
-수정본은 아직 실제 Vercel Git 배포에서 확인하지 않았습니다. 배포 완료 후 프록시가 쿠키와 큰 multipart를 전달하는 결과를 확인해야 합니다.
+이후 사용자가 `032b31d`를 push했고 실제 Vercel Git 배포가 성공했습니다. 아래 공개 응답과 실제 로그인을 확인했으며, 큰 multipart 업로드는 아직 확인하지 않았습니다.
 
 ## 사용자 배포 진행 상황
 
 - 10월 16일 화면: Railway `sincere-presence` Backend 및 Postgres 모두 Online, 각각 별도 볼륨 연결.
 - 10월 17일 읽기 전용 HTTP 확인: `https://sincere-presence-production.up.railway.app/api/health` → **200**, `{"status":"UP"}`. 해당 health는 실제 DB `SELECT 1`을 수행합니다.
-- Vercel `rce-lms` 프로젝트는 `frontend`, Vite, `npm ci`, `npm run build`, `dist`, Node 22.x로 설정된 화면을 확인했습니다. `BACKEND_ORIGIN` 저장 결과와 Root 밖 파일 포함 옵션의 최종 상태는 아직 직접 확인하지 못했습니다.
-- 사용자 화면의 현재 Production은 이전 `870d3f0` 배포입니다. 최신 `33a1ca4` 배포는 위 설정 오류로 실패했습니다.
-- 이후 push는 Vercel과 Railway 자동 배포를 시작할 수 있으므로, 실제 배포는 사용자가 수행한다는 원래 요청에 따라 수정 커밋 push를 다음 사용자 단계로 남겼습니다.
+- Vercel `rce-lms` 프로젝트는 `frontend`, Vite, `npm ci`, `npm run build`, `dist`, Node 22.x로 설정된 화면을 확인했습니다. Root 밖 파일 포함 옵션의 최종 상태는 직접 확인하지 않았지만 현재 빌드는 성공했습니다.
+- 10월 18일 사용자 화면: `032b31d`의 Vercel Production 및 `fortunate-elegance / sincere-presence` 배포 성공. 이전 `870d3f0` 데모 화면과 `33a1ca4` 설정 오류는 과거 배포 결과입니다.
+- 읽기 전용 확인: `https://rce-lms.vercel.app/`와 `/login` 200. 공개 JS 번들의 SHA-256이 로컬 최신 빌드와 일치했습니다.
+- 같은 Vercel origin의 `/api/health`는 200 및 `UP`, `/api/csrf`는 200 및 토큰 필드 존재, 비로그인 `/api/auth/me`는 401. API `no-store`와 CSRF 쿠키의 Secure·SameSite=Lax·Path=/를 확인했습니다. 토큰·쿠키 실제 값은 기록하지 않았습니다.
+- 사용자가 운영 DB에서 최초 활성 STAFF를 발급했고, 최신 HTTPS 화면에서 로그인 후 대시보드 접근을 확인했습니다. 계정 개인정보·비밀번호는 저장소에 기록하지 않습니다.
+- 별도 `mindful-adventure / RCE-LMS`의 실패 로그는 저장소 루트에서 Railpack이 앱을 감지하지 못한 결과였습니다. 사용자는 사용하지 않는 해당 서비스의 Git 연결을 해제했다고 확인했습니다. 현재 운영 Backend는 `fortunate-elegance / sincere-presence`입니다.
+- 이후 push는 Vercel과 Railway 자동 배포를 시작할 수 있으므로, 실제 배포는 사용자가 수행한다는 원래 요청에 따라 1.0.0 릴리스 push는 사용자 단계로 남깁니다.
 
 ## 최초 STAFF 발급 도구
 
@@ -92,14 +96,27 @@
 - DB/초기 비밀번호가 터미널 출력에 노출되지 않음.
 - 임시 라이브러리 폴더 정리, `bash -n` 통과, 운영 JAR에 도구 미포함.
 
-검사에서 만든 계정만 삭제했고, 검사 전후 업무 테이블 9개의 전체 행 지문이 일치했습니다. 실제 운영 계정은 생성하지 않았습니다.
+검사에서 만든 계정만 삭제했고, 검사 전후 업무 테이블 9개의 전체 행 지문이 일치했습니다. 이 로컬 검사에서는 실제 운영 계정을 생성하지 않았습니다. 이후 운영 계정 발급은 위 진행 상황처럼 사용자가 직접 완료했습니다.
+
+## 1.0.0 릴리스 준비 검증
+
+프런트엔드 package/lockfile와 Backend Gradle 버전을 `1.0.0`으로 맞췄습니다. STAFF 발급 도구·E2E 실행 스크립트·README의 JAR 경로도 함께 변경했습니다. 의존성 그래프, 애플리케이션 기능, Flyway migration은 `032b31d`와 같습니다.
+
+- Node **22.23.3**의 `npm run build` 성공(TypeScript + Vite **7.3.6**). 첫 시도에서 로컬 `node_modules/@types`의 이름이 ` 2`로 끝나는 빈 중복 폴더 8개로 TS2688이 발생했습니다. 비어 있는 생성 폴더만 제거한 뒤 빌드가 성공했습니다. 의존성 버전이나 TypeScript 설정은 변경하지 않았습니다.
+- Java **21.0.8**의 `./gradlew bootJar --console=plain` 성공. `rce-lms-backend-1.0.0.jar`의 manifest 버전, 포함 라이브러리 및 운영자 도구 미포함을 확인했습니다.
+- package/lockfile는 앱 버전 필드만 변경되었음을 JSON 비교로 확인했습니다.
+- 수정된 두 shell script의 `bash -n` 및 생성된 JAR 경로 일치 확인 통과.
+- 변경·미추적 후보가 릴리스 대상 9개 파일과 일치하고, 로컬 Secret 값 및 주요 인증정보 패턴 발견 0건을 확인했습니다. 환경 파일·빌드 결과·업로드 저장소는 추적 대상에 없으며 변경분 공백 검사도 통과했습니다.
+- 기존 전체 Backend·E2E·DB 영속성 검사는 반복하지 않았습니다. 운영 데이터는 이번 릴리스 준비에서 변경하지 않았습니다.
+
+릴리스 커밋과 `v1.0.0` 태그의 원격 push 및 해당 커밋의 클라우드 배포 확인은 사용자 단계입니다.
 
 ## 실제 배포 후 남은 확인
 
 아래 항목은 **미실행**이며 [가이드의 smoke test](../DEPLOYMENT.md#13-최소-smoke-test와-영속성-확인)로 사용자가 확인합니다.
 
-- 수정 커밋의 실제 Vercel 배포 성공, 최신 화면의 HTTPS 접속. Railway Backend·DB의 Online 및 공개 Health는 확인했지만 업로드 볼륨의 실제 파일 쓰기·보존은 아직 미확인.
-- Vercel → Railway의 `/api` 전달, 로그인·CSRF·복수 Set-Cookie·로그아웃.
+- 최초 STAFF 비밀번호 변경 후 새 비밀번호 재로그인, 로그아웃, 로그인 시 복수 Set-Cookie의 개별 속성 확인. 기본 로그인·대시보드와 `/api` 전달·CSRF는 이미 확인했습니다.
+- Railway 업로드 볼륨의 실제 파일 쓰기·보존. Backend·DB Online과 공개 Health 확인은 완료했습니다.
 - 현재 정책 상한인 파일당 10MiB·최대 5개 업로드와 다운로드. 로컬의 작은 파일 성공이 클라우드 상한 성공을 의미하지 않습니다.
 - 실제 Backend 재배포 후 DB·파일 유지, DB 서비스 재시작 후 데이터 유지.
 - 최소 STAFF/MEMBER 과제·제출·검토·순위 흐름과 백업 설정.

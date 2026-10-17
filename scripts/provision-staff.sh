@@ -39,7 +39,7 @@ echo '운영자 도구의 의존성을 준비합니다. DB 연결이나 서버 �
   cd "$project_root/backend"
   ./gradlew bootJar --console=plain --quiet
 )
-application_jar="$project_root/backend/build/libs/rce-lms-backend-0.1.0.jar"
+application_jar="$project_root/backend/build/libs/rce-lms-backend-1.0.0.jar"
 (
   cd "$tool_directory"
   "$jar_cmd" --extract --file "$application_jar" BOOT-INF/lib

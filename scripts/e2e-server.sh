@@ -20,4 +20,4 @@ task_java="${JAVA_HOME:+$JAVA_HOME/bin/}java"
 if [[ -z "${JAVA_HOME:-}" && -x /usr/libexec/java_home ]]; then
   task_java="$(/usr/libexec/java_home -v 21)/bin/java"
 fi
-exec "$task_java" -jar backend/build/libs/rce-lms-backend-0.1.0.jar
+exec "$task_java" -jar backend/build/libs/rce-lms-backend-1.0.0.jar
