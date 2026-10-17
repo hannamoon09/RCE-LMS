@@ -1,10 +1,10 @@
 # RCE LMS 첫 배포 가이드
 
-준비 시작: 2026-10-14 · 최종 정리: 2026-10-16 · 대상: 동아리 Private Beta
+준비 시작: 2026-10-14 · 최종 정리: 2026-10-18 · 대상: 동아리 Private Beta
 
 이 문서는 **사용자가 직접 클릭·입력·배포하는 안내서**입니다. 계정 생성, 요금제 선택, Secret 입력, 서비스 생성, Deploy, DNS 변경은 사용자가 수행합니다. 채팅에서는 아래 작업을 한 단계씩 진행합니다. 다음 단계로 넘어가기 전에 해당 단계의 확인 결과를 알려주세요. 비밀번호·토큰·쿠키 값은 채팅이나 스크린샷에 포함하지 않습니다.
 
-코드·문서 준비와 로컬 검증은 완료했습니다. 2026-10-16 사용자 화면에서 Railway 프로젝트 생성과 PostgreSQL 18의 Online 상태·DB 볼륨 연결을 확인했습니다. 다음은 Backend 빈 서비스 생성이며, Backend·Frontend 배포와 smoke test는 사용자 실행 대기 상태입니다. 완료한 검증과 아직 확인하지 않은 항목은 [배포 준비 검증 기록](docs/deployment-prep-verification.md)에 구분했습니다.
+Railway Backend와 PostgreSQL 배포는 완료했고, 2026-10-17 공개 `/api/health`의 HTTP 200 및 `UP` 응답까지 확인했습니다. Vercel은 최신 소스 배포 중 설정 스키마 오류가 발생해 2026-10-18 설정을 수정하고 로컬 검증을 마쳤습니다. 현재 다음 단계는 **수정 커밋을 사용자가 push해 Vercel 배포 결과를 확인하는 것**입니다. 최신 프런트엔드 배포와 운영 로그인·파일 영속성 smoke test는 아직 완료되지 않았습니다. 상세 근거는 [배포 준비 검증 기록](docs/deployment-prep-verification.md)에 구분했습니다.
 
 ## 배포 구성
 
@@ -25,7 +25,7 @@ GitHub Private: hannamoon09/RCE-LMS (main)
 
 Dockerfile은 Java 21과 Gradle Wrapper로 JAR를 만들고 JRE 21로 실행합니다. 빌드에 DB나 Secret이 필요하지 않습니다. Spring Boot의 Flyway가 **서버 시작 시** migration을 적용하고 Hibernate는 `validate`만 수행합니다.
 
-Vercel은 공식 지원하는 [`vercel.mjs`](frontend/vercel.mjs)에서 `BACKEND_ORIGIN`을 읽습니다. 정적 `vercel.json`에 환경변수 보간 문법을 추측해 넣지 않습니다. URL이 빠지거나 HTTP·비밀번호·경로·query를 포함하면 설정 평가가 실패하도록 했습니다. [Vercel 설정](https://vercel.com/docs/project-configuration/vercel-ts)
+Vercel은 공식 지원하는 [`vercel.mjs`](frontend/vercel.mjs)에서 `BACKEND_ORIGIN`을 읽고 `@vercel/config/v1`의 `routes.rewrite()`와 `routes.header()`로 규칙을 만듭니다. 이 SDK는 빌드용 의존성으로 버전을 고정했습니다. 정적 `vercel.json`에 환경변수 보간 문법을 추측해 넣지 않습니다. URL이 빠지거나 HTTP·비밀번호·경로·query를 포함하면 설정 평가가 실패하도록 했습니다. [Vercel 설정](https://vercel.com/docs/project-configuration/vercel-ts)
 
 Railway의 기존 Config as Code는 신규 서비스에서 사용할 수 없고 기존 서비스도 2026-12-01 종료 예정으로 안내되어 있어, 이번에는 `railway.toml`을 추가하지 않습니다. Dockerfile과 아래 대시보드 설정을 사용합니다. [Railway 안내](https://docs.railway.com/config-as-code)
 
@@ -35,7 +35,7 @@ Railway의 기존 Config as Code는 신규 서비스에서 사용할 수 없고 
 
 **사용자 확인:** [GitHub 저장소](https://github.com/hannamoon09/RCE-LMS)를 엽니다. `frontend`, `backend`, `scripts`, `compose.yaml`, 이 문서가 보여야 합니다. `.env`, `node_modules`, `dist`, `backend/build`, 업로드 원본은 없어야 합니다.
 
-기존 Vercel Git 연결은 배포 준비 중 자동 배포를 막기 위해 사용자가 해제했습니다. 아래 Vercel 설정을 준비한 뒤 다시 연결합니다. 새 GitHub 저장소를 만들거나 기존 `origin`을 바꿀 필요가 없습니다.
+기존 Vercel Git 연결은 준비 중 사용자가 해제했다가 2026-10-17 다시 연결했습니다. Railway도 `main` 자동 배포가 켜져 있으므로 이후 push는 실제 배포를 시작할 수 있습니다. 새 GitHub 저장소를 만들거나 기존 `origin`을 바꿀 필요가 없습니다.
 
 ## 2. Railway 계정과 빈 프로젝트
 
@@ -177,7 +177,7 @@ bash scripts/provision-staff.sh
 **사용자 작업:**
 
 1. [Vercel 대시보드](https://vercel.com/dashboard)에 로그인합니다.
-2. 기존 RCE 프로젝트를 계속 사용한다면 그 프로젝트의 **Settings**를 엽니다. 아래 빌드 설정과 환경변수를 먼저 저장한 다음 **Git → Connect Git Repository**에서 `RCE-LMS`를 다시 연결합니다. 연결이 배포를 시작할 수 있으므로 Backend Health 확인 후 진행합니다.
+2. 기존 RCE 프로젝트를 계속 사용한다면 그 프로젝트의 **Settings**를 엽니다. Git 연결이 없는 경우에만 아래 빌드 설정과 환경변수를 먼저 저장한 다음 **Git → Connect Git Repository**에서 `RCE-LMS`를 연결합니다. 연결이 배포를 시작할 수 있으므로 Backend Health 확인 후 진행합니다. 이미 연결된 현재 프로젝트는 재연결하지 않습니다.
 3. 새 프로젝트를 만들 경우 **Add New → Project → Import Git Repository**에서 `RCE-LMS`를 선택합니다.
 4. Root Directory를 **`frontend`**로 지정합니다.
 5. 아래 빌드 설정을 확인합니다.
@@ -199,7 +199,9 @@ bash scripts/provision-staff.sh
 
 ## 10. Frontend 첫 배포
 
-1. 위 설정을 모두 저장한 뒤 사용자가 **Deploy**를 누릅니다. 기존 프로젝트라면 최신 `main` 커밋의 배포를 실행합니다.
+현재 프로젝트는 사용자 터미널에서 저장소 루트의 `git push origin main`으로 수정 커밋을 올립니다. Vercel **Deployments**에서 새 커밋이 선택됐는지 확인합니다. 이전 실패 커밋을 **Redeploy**하면 수정 코드가 포함되지 않습니다. 자동 배포가 시작되지 않으면 **Create Deployment**에서 최신 `main` 커밋을 선택합니다. Railway도 자동 재배포될 수 있으므로 완료 상태를 함께 확인합니다.
+
+1. push로 자동 배포가 시작됐다면 그 배포의 진행 상태를 확인합니다. 새 프로젝트 또는 수동 배포인 경우에만 위 설정을 저장한 뒤 **Deploy**를 누릅니다. Source가 최신 `main` 커밋인지 확인합니다.
 2. 빌드 로그에서 TypeScript와 Vite가 성공했는지 확인합니다.
 3. 발급된 Vercel HTTPS 주소를 엽니다. 기존 브라우저 쿠키의 영향을 피하려면 새 시크릿 창을 사용합니다.
 4. 랜딩과 `/login`이 보이는지, `/login` 주소를 직접 입력하고 새로고침해도 보이는지 확인합니다.
@@ -306,6 +308,8 @@ Railway에서 **PostgreSQL Volume과 업로드 Volume 각각**의 **Backups**를
 | 문제 | 먼저 확인 |
 | --- | --- |
 | Frontend Build 실패 | Vercel Root가 `frontend`인지, Node 22.x인지, `npm ci`/lockfile이 맞는지, 첫 TypeScript 오류 |
+| Root Directory `frontend` does not exist | 배포 Source 커밋 확인. 과거 `870d3f0`에는 `frontend/`가 없으므로 최신 `main`을 배포. 현재 Root 설정 `frontend`는 유지 |
+| `headers[0]` missing required property `headers` | 2026-10-18 SDK helper 수정이 포함된 최신 커밋인지 확인. `33a1ca4` 재배포로는 수정이 반영되지 않음. `@vercel/config`와 lockfile도 함께 필요 |
 | BACKEND_ORIGIN 설정 오류 | Production 변수에 HTTPS origin만 있는지. `/api`, 비밀번호, 공백, query 제거 후 재배포 |
 | Backend Build 실패 | Root `/backend`, Dockerfile 감지, Gradle 다운로드·컴파일 로그. DB Secret은 이미지 빌드에 필요 없음 |
 | DB Connection 실패 | 같은 프로젝트·환경인지, `jdbc:postgresql://` 형식과 서비스 참조 이름·DB 이름 확인 |

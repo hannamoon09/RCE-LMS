@@ -1,3 +1,5 @@
+import { routes } from '@vercel/config/v1';
+
 const value = process.env.BACKEND_ORIGIN?.trim();
 const configurationError = 'BACKEND_ORIGIN must be an HTTPS origin without credentials, a path, a query, or a fragment.';
 
@@ -33,13 +35,14 @@ export const config = {
   installCommand: 'npm ci',
   buildCommand: 'npm run build',
   outputDirectory: 'dist',
+  // Keep dynamic values in SDK calls, as in Vercel's API proxy template.
   rewrites: [
-    { source: '/api', destination: `${backend.origin}/api` },
-    { source: '/api/(.*)', destination: `${backend.origin}/api/$1` },
-    { source: '/(.*)', destination: '/index.html' },
+    routes.rewrite('/api', `${backend.origin}/api`),
+    routes.rewrite('/api/(.*)', `${backend.origin}/api/$1`),
+    routes.rewrite('/(.*)', '/index.html'),
   ],
   headers: [
-    { source: '/api', headers: noStoreHeaders },
-    { source: '/api/(.*)', headers: noStoreHeaders },
+    routes.header('/api', noStoreHeaders),
+    routes.header('/api/(.*)', noStoreHeaders),
   ],
 };
